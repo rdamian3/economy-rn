@@ -22,7 +22,12 @@ export function doSignup(data) {
         }
       )
       .then(res => {
-        dispatch(comunication.stopFetching());
+        dispatch(setUserData(res.data.user));
+        localStorage.setItem('userData', JSON.stringify(res.data.user));
+        localStorage.setItem('userToken', res.data.token);
+        dispatch(setToken(res.data.token));
+        dispatch(movement.getMovements());
+        dispatch(category.getCategories());
         dispatch(
           comunication.setMessage({
             message: 'Bienvenido',
@@ -30,6 +35,7 @@ export function doSignup(data) {
             kind: 'user-signup'
           })
         );
+        dispatch(comunication.stopFetching());
       })
       .catch(e => {
         dispatch(

@@ -7,7 +7,7 @@ class PieChart extends Component {
   render() {
     const { movs } = this.props;
     if (Object.entries(movs).length === 0 && movs.constructor === Object) {
-      return null;
+      return <div className="pie-no-movements">Aún no hay movimientos...</div>;
     }
     const options = {
       labels: Object.keys(movs),

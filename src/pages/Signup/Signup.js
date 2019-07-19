@@ -88,7 +88,11 @@ class Signup extends Component {
     }
   };
 
-  componentDidUpdate(prevProps) {}
+  componentDidUpdate(prevProps) {
+    if(prevProps.message !== this.props.message && this.props.message.kind === "user-signup"){
+      this.props.history.push('/home');
+    }
+  }
 
   render() {
     const {

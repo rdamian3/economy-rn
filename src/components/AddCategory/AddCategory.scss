@@ -1,0 +1,7 @@
+@import "../../utils/colors.scss";
+@import "../../utils/mixins.scss";
+
+.Addcategory {
+  @include flex-center-all;
+  flex-direction: column;
+}

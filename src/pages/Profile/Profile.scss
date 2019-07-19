@@ -1,0 +1,90 @@
+@import './../../utils/colors.scss';
+@import './../../utils/mixins.scss';
+
+.Profile {
+  @include flex-center-all;
+  padding: 20px;
+  .card {
+    @include box-shadow;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10px 10px;
+    width: 100%;
+
+    .container {
+      display: flex;
+
+      .sidebar {
+        @include flex-center-all;
+        border-right: 1px solid $light-grey;
+        flex-direction: column;
+        flex: 1;
+        padding: 20px;
+
+        .title {
+          margin-bottom: 10px;
+        }
+
+        .member-since {
+          color: $light-grey;
+          font-size: 14px;
+          margin-bottom: 10px;
+          span:first-child {
+            margin-right: 5px;
+          }
+        }
+
+        .image-container {
+          align-items: center;
+          display: flex;
+          flex-direction: column;
+          flex: 5;
+          justify-content: flex-start;
+
+          .image {
+            background-color: $light-grey;
+            border-radius: 100%;
+            height: 130px;
+            margin-bottom: 10px;
+            width: 130px;
+          }
+        }
+      }
+
+      .body {
+        align-items: flex-start;
+        display: flex;
+        flex-direction: column;
+        flex: 3;
+        justify-content: center;
+        padding: 20px;
+      }
+    }
+
+    .footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    .progress {
+      color: #ffffff !important;
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .Profile {
+    .card {
+      .container {
+        flex-direction: column;
+
+        .sidebar {
+          border-right: none;
+          border-bottom: 1px solid $light-grey;
+        }
+      }
+    }
+  }
+}

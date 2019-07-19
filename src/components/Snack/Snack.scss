@@ -1,0 +1,10 @@
+@import "./../../utils/colors.scss";
+
+.Snack {
+  .success {
+    background-color: $green;
+  }
+  .error {
+    background-color: $alert-red;
+  }
+}

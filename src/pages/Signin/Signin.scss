@@ -1,0 +1,65 @@
+@import "./../../utils/mixins.scss";
+@import "./../../utils/colors.scss";
+
+.signin {
+  @include flex-center-all;
+  flex-direction: column;
+  .card {
+    @include box-shadow;
+    border-radius: 4px;
+    max-width: 270px;
+    width: 100%;
+
+    .body {
+      flex-direction: column;
+      .MuiFormControl-marginNormal {
+        width: 100%;
+      }
+      .forgot {
+        display: flex;
+        width: 100%;
+        justify-content: flex-end;
+        a {
+          color: $light-grey;
+          font-size: 12px;
+          &:hover {
+            color: $grey;
+          }
+        }
+      }
+    }
+
+    .body,
+    .footer {
+      @include flex-center-all;
+      padding: 20px;
+    }
+
+    .footer {
+      border-top: 1px solid $light-grey;
+
+      a {
+        color: $blue;
+        cursor: pointer;
+        font-weight: 500;
+        margin-left: 3px;
+      }
+    }
+
+    .progress {
+      color: #ffffff !important;
+    }
+
+    .MuiButton-contained {
+      margin-top: 15px;
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .signin {
+    .card {
+      width: 80%;
+    }
+  }
+}

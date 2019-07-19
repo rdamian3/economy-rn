@@ -1,0 +1,52 @@
+@import "./../../utils/mixins.scss";
+@import "./../../utils/colors.scss";
+
+.signup {
+  @include flex-center-all;
+  flex-direction: column;
+  .card {
+    @include box-shadow;
+    border-radius: 4px;
+    max-width: 270px;
+    width: 100%;
+
+    .body,
+    .footer {
+      padding: 20px;
+    }
+
+    .body {
+      @include flex-center-all;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .footer {
+      @include flex-center-all;
+      border-top: 1px solid $light-grey;
+
+      a {
+        color: $blue;
+        cursor: pointer;
+        font-weight: 500;
+        margin-left: 3px;
+      }
+    }
+
+    .progress {
+      color: #ffffff !important;
+    }
+
+    .MuiButton-contained {
+      margin-top: 20px;
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .signup {
+    .card {
+      width: 80%;
+    }
+  }
+}

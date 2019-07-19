@@ -1,0 +1,93 @@
+@import "./src/utils/colors.scss";
+@import "./src/utils/mixins.scss";
+
+.modal {
+  display: none;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 110;
+
+  .modal-container {
+    background: $pure-white;
+    border-radius: 3px;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+    height: auto;
+    left: 50%;
+    opacity: 0;
+    position: fixed;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 260px;
+    width: 0;
+
+    .head {
+      align-items: center;
+      border-bottom: 1px solid $white;
+      cursor: move;
+      display: flex;
+      height: 45px;
+      justify-content: space-between;
+      padding: 0 10px;
+      .close {
+        cursor: pointer;
+      }
+      span {
+        font-size: 18px;
+      }
+    }
+
+    .body {
+      min-height: 100px;
+      padding-bottom: 20px;
+    }
+
+    .footer {
+      align-items: center;
+      border-top: 1px solid $white;
+      display: flex;
+      height: 45px;
+      justify-content: flex-end;
+      padding: 10px;
+
+      .MuiButtonBase-root {
+        margin-left: 5px;
+      }
+    }
+
+    &.positive {
+      border-top: 4px solid $green;
+      border-bottom: 4px solid $green;
+    }
+
+    &.negative {
+      border-top: 4px solid $red;
+      border-bottom: 4px solid $red;
+    }
+  }
+
+  .background {
+    background: rgba(0, 0, 0, 0.6);
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.is-open {
+  display: block;
+  .modal-container {
+    opacity: 1;
+    width: 20%;
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  .modal {
+    .modal-container {
+      transform: translate(-190px, -210px);
+      width: 90%;
+    }
+  }
+}

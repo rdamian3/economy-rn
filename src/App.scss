@@ -1,0 +1,101 @@
+@import './utils/colors.scss';
+
+.App {
+  padding: 50px 0;
+
+  .MuiButton-containedPrimary {
+    background-color: $blue;
+    &:hover {
+      background-color: $light-blue;
+    }
+  }
+
+  .MuiSvgIcon-colorPrimary {
+    color: $blue;
+    &:hover {
+      color: $light-blue;
+    }
+  }
+}
+
+@media only screen and (min-width: 960px) {
+  .logged {
+    padding-left: 300px;
+  }
+}
+
+.debug {
+  outline: 1px dashed rgba(255, 0, 0, 0.3);
+  * {
+    outline: 1px dashed rgba(255, 0, 0, 0.3);
+    background: rgba(255, 0, 0, 0.03);
+  }
+}
+a,
+body,
+div,
+fieldset,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+html,
+img,
+label,
+legend,
+li,
+nav,
+ol,
+p,
+span,
+table,
+td,
+th,
+tr,
+ul,
+video {
+  border: 0;
+  font-family: 'Roboto';
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+a {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
+
+p,
+span,
+a,
+label,
+input {
+  font-size: 14px;
+}

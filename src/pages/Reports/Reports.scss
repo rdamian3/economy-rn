@@ -1,0 +1,52 @@
+@import './../../utils/colors.scss';
+@import './../../utils/mixins.scss';
+
+.Reports {
+  @include flex-center-all;
+  padding: 20px;
+
+  .card {
+    @include box-shadow;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10px 10px;
+    width: 100%;
+
+    .body {
+      margin-bottom: 30px;
+      .container {
+        display: flex;
+        align-items: flex-end;
+        padding: 20px 0;
+        .category {
+          min-width: 100px;
+        }
+
+        .category,
+        .date-from,
+        .date-to {
+          margin-right: 2vw;
+        }
+      }
+    }
+  }
+  .option-cell,
+  .foot-cell {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .Reports {
+    padding: 0px 5px;
+    .container {
+      flex-wrap: wrap;
+      .date-from,
+      .date-to {
+        width: 90vw;
+        margin-bottom: 20px;
+      }
+    }
+  }
+}

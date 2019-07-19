@@ -1,0 +1,61 @@
+@import './../../utils/colors.scss';
+@import './../../utils/mixins.scss';
+
+.ActualState {
+  @include flex-center-all;
+  @include height-width;
+  flex-direction: column;
+
+  .body {
+    @include flex-center-all;
+    flex-direction: column;
+    .title {
+      color: $light-grey;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: $light-grey;
+      font-weight: 500;
+      margin-bottom: 15px;
+      text-transform: capitalize;
+    }
+
+    .global {
+      margin-bottom: 30px;
+    }
+
+    .global,
+    .month {
+      @include flex-center-all;
+      flex-direction: column;
+    }
+
+    .total,
+    .monthly {
+      font-size: 24px;
+      font-weight: 600;
+    }
+  }
+
+  .possitive {
+    color: $green;
+  }
+
+  .negative {
+    color: $red;
+  }
+
+  .no-movements {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    span {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .start {
+      color: $blue;
+    }
+  }
+}

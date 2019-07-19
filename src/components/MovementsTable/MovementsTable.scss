@@ -1,0 +1,104 @@
+@import './../../utils/colors.scss';
+@import './../../utils/mixins.scss';
+
+.table-container {
+  @include box-shadow;
+  border-radius: 3px;
+
+  .table-head {
+    .MuiTableCell-head {
+      color: $white;
+      background-color: $grey;
+    }
+  }
+
+  .head-cell {
+    cursor: pointer;
+  }
+
+  .date-separator {
+    border-top: 2px solid $light-grey;
+  }
+
+  .date-cell,
+  .amount-cell,
+  .category-cell {
+    width: 100px;
+    .MuiTableSortLabel-icon {
+      color: $pure-white !important;
+      &:hover {
+        .MuiTableSortLabel-icon {
+          color: $pure-white !important;
+        }
+      }
+    }
+  }
+
+  .MuiTableCell-root {
+    padding: 14px 10px 16px;
+  }
+
+  .option-cell {
+    padding: 5px 0;
+    width: 55px;
+
+    .MuiIconButton-root {
+      padding: 8px;
+    }
+  }
+
+  .MuiTablePagination-root:last-child {
+    padding-right: 0;
+  }
+
+  .MuiTableCell-root:last-child {
+    padding-right: 0;
+  }
+
+  .MuiTableFooter-root {
+    background-color: $grey;
+
+    .foot-cell {
+      color: $white;
+    }
+
+    .positive {
+      color: $green;
+    }
+
+    .negative {
+      color: $red;
+    }
+
+    .MuiTablePagination-caption {
+      color: $white;
+    }
+
+    .MuiTablePagination-actions {
+      .Mui-disabled {
+        color: $white;
+        opacity: 0.3;
+      }
+      .MuiIconButton-colorInherit {
+        color: $white;
+      }
+    }
+    .MuiIconButton-root:hover {
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .table-container {
+    .date-cell,
+    .amount-cell,
+    .description-cell,
+    .category-cell {
+      max-width: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}

@@ -141,6 +141,7 @@ class Profile extends Component {
                 onChange={this.handleOnEmailChange}
                 inputProps={{
                   autoComplete: 'new-password',
+                  maxLength: 50,
                   form: {
                     autoComplete: 'off'
                   }
@@ -155,6 +156,7 @@ class Profile extends Component {
                 margin="normal"
                 onChange={this.handleOnDisplayNameChange}
                 inputProps={{
+                  maxLength: 20,
                   autoComplete: 'new-password',
                   form: {
                     autoComplete: 'off'

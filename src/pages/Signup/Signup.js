@@ -39,9 +39,9 @@ class Signup extends Component {
   };
 
   handleOnDisplayNameChange = event => {
-    const name = event.target.value;
-    const displayNameError = name.length < 2;
-    this.setState({ name, displayNameError });
+    const displayName = event.target.value;
+    const displayNameError = displayName.length < 2;
+    this.setState({ displayName, displayNameError });
   };
 
   handleOnPasswordChange = event => {
@@ -89,7 +89,10 @@ class Signup extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    if(prevProps.message !== this.props.message && this.props.message.kind === "user-signup"){
+    if (
+      prevProps.message !== this.props.message &&
+      this.props.message.kind === 'user-signup'
+    ) {
       this.props.history.push('/home');
     }
   }
@@ -119,6 +122,7 @@ class Signup extends Component {
               onFocus={this.handleOnEmailChange}
               inputProps={{
                 autoComplete: 'new-password',
+                maxLength: 50,
                 form: {
                   autoComplete: 'off'
                 }
@@ -134,6 +138,7 @@ class Signup extends Component {
               onFocus={this.handleOnDisplayNameChange}
               inputProps={{
                 autoComplete: 'new-password',
+                maxLength: 20,
                 form: {
                   autoComplete: 'off'
                 }
@@ -150,6 +155,7 @@ class Signup extends Component {
               type="password"
               inputProps={{
                 autoComplete: 'new-password',
+                maxLength: 50,
                 form: {
                   autoComplete: 'off'
                 }
@@ -169,6 +175,7 @@ class Signup extends Component {
               type="password"
               inputProps={{
                 autoComplete: 'new-password',
+                maxLength: 50,
                 form: {
                   autoComplete: 'off'
                 }

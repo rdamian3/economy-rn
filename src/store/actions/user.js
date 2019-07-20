@@ -2,11 +2,11 @@ import axios from 'axios';
 import { comunication, movement, category } from './index';
 import { REMOVE_USER_DATA, SET_TOKEN, SET_USER_DATA } from './types';
 import { API_URL } from './../../utils/utils';
+import { userResponse } from './../../utils/responseHandler';
 
 export function doSignup(data) {
   return dispatch => {
     dispatch(comunication.startFetching());
-
     axios
       .post(
         API_URL + '/signup',
@@ -28,19 +28,22 @@ export function doSignup(data) {
         dispatch(setToken(res.data.token));
         dispatch(movement.getMovements());
         dispatch(category.getCategories());
+
+        const message = userResponse(res);
         dispatch(
           comunication.setMessage({
-            message: 'Bienvenido',
+            message,
             type: 'success',
             kind: 'user-signup'
           })
         );
         dispatch(comunication.stopFetching());
       })
-      .catch(e => {
+      .catch(res => {
+        const message = userResponse(res.response);
         dispatch(
           comunication.setMessage({
-            message: e.response.data.message,
+            message,
             type: 'error',
             kind: 'user'
           })
@@ -71,24 +74,27 @@ export function doSignin(data) {
         dispatch(setToken(res.data.token));
         dispatch(movement.getMovements());
         dispatch(category.getCategories());
+
+        const message = userResponse(res);
         dispatch(
           comunication.setMessage({
-            message: 'Bienvenido',
+            message,
             type: 'success',
             kind: 'user'
           })
         );
         dispatch(comunication.stopFetching());
       })
-      .catch(e => {
-        dispatch(comunication.stopFetching());
+      .catch(res => {
+        const message = userResponse(res.response);
         dispatch(
           comunication.setMessage({
-            message: e.response.data.message,
+            message,
             type: 'error',
             kind: 'user'
           })
         );
+        dispatch(comunication.stopFetching());
       });
   };
 }
@@ -115,6 +121,7 @@ export function doUpdate(data) {
         }
       )
       .then(res => {
+        debugger;
         dispatch(setUserData(res.data.user));
         localStorage.setItem('userData', JSON.stringify(res.data.user));
         dispatch(
@@ -126,11 +133,11 @@ export function doUpdate(data) {
         );
         dispatch(comunication.stopFetching());
       })
-      .catch(e => {
+      .catch(res => {
         dispatch(comunication.stopFetching());
         dispatch(
           comunication.setMessage({
-            message: e.response.data.message,
+            message: res.response.data.message,
             type: 'error',
             kind: 'user'
           })
@@ -161,10 +168,10 @@ export function doForgot(email) {
           })
         );
       })
-      .catch(e => {
+      .catch(res => {
         dispatch(
           comunication.setMessage({
-            message: e.response.data.message,
+            message: res.response.data.message,
             type: 'error',
             kind: 'user'
           })

@@ -1,21 +1,22 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import moment from 'moment';
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import 'moment/locale/es';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import moment from "moment";
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { comunication } from "./../../store/actions/index";
+import "moment/locale/es";
 
-import Button from '@material-ui/core/Button';
-import DateRange from '@material-ui/icons/DateRange';
-import FormControl from '@material-ui/core/FormControl';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import MomentUtils from '@date-io/moment';
-import MovementsTable from './../../components/MovementsTable/MovementsTable';
-import Select from '@material-ui/core/Select';
-import Typography from '@material-ui/core/Typography';
+import Button from "@material-ui/core/Button";
+import DateRange from "@material-ui/icons/DateRange";
+import FormControl from "@material-ui/core/FormControl";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import MomentUtils from "@date-io/moment";
+import MovementsTable from "./../../components/MovementsTable/MovementsTable";
+import Select from "@material-ui/core/Select";
+import Typography from "@material-ui/core/Typography";
 
-import './Reports.scss';
+import "./Reports.scss";
 
 class Reports extends Component {
   constructor(props) {
@@ -24,7 +25,7 @@ class Reports extends Component {
     this.state = {
       dateFrom: moment.utc(),
       dateTo: moment.utc(),
-      category: { name: '', _id: '' },
+      category: { name: "", _id: "" },
       movements: [],
       categories: [],
       filteredMovements: []
@@ -32,7 +33,14 @@ class Reports extends Component {
   }
 
   doFilterMovements = () => {
-    let { dateFrom, dateTo, category } = this.state;
+    let { dateFrom, dateTo, category, movements } = this.state;
+    if (movements.length === 0) {
+      return this.props.setMessage({
+        message: "No hay movimientos para filtrar",
+        type: "error",
+        kind: "category"
+      });
+    }
     const filteredMovements = this.state.movements
       .filter(el => {
         if (
@@ -45,7 +53,7 @@ class Reports extends Component {
         }
       })
       .filter(el => {
-        if (category.name !== '' && category._id !== 'all') {
+        if (category.name !== "" && category._id !== "all") {
           return category._id === el.category._id;
         } else {
           return true;
@@ -58,7 +66,7 @@ class Reports extends Component {
 
   handleCategoryChange = event => {
     const name = event.currentTarget.innerText;
-    const _id = event.target.value !== undefined ? event.target.value : '';
+    const _id = event.target.value !== undefined ? event.target.value : "";
     this.setState({ category: { name, _id } });
   };
 
@@ -74,13 +82,13 @@ class Reports extends Component {
 
   componentDidMount() {
     const { movements, categories } = this.props;
-    const all = { name: 'Todas las categorías', _id: 'all' };
+    const all = { name: "Todas las categorías", _id: "all" };
     this.setState({ movements, categories: [all, ...categories] });
   }
 
   componentDidUpdate(prevProps) {
     const { movements, categories } = this.props;
-    const all = { name: 'Todas las categorías', _id: 'all' };
+    const all = { name: "Todas las categorías", _id: "all" };
 
     if (prevProps.movements !== movements) {
       this.setState({ movements });
@@ -140,8 +148,8 @@ class Reports extends Component {
                 <Select
                   className="select"
                   inputProps={{
-                    name: 'category',
-                    id: 'cat'
+                    name: "category",
+                    id: "cat"
                   }}
                   onChange={this.handleCategoryChange}
                   value={category._id}
@@ -182,4 +190,11 @@ const mapStateToProps = state => {
   return { movements: state.movements, categories: state.categories };
 };
 
-export default connect(mapStateToProps)(Reports);
+const mapDispatchToProps = dispatch => ({
+  setMessage: data => dispatch(comunication.setMessage(data))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Reports);

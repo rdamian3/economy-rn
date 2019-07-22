@@ -1,5 +1,5 @@
-@import './../../utils/colors.scss';
-@import './../../utils/mixins.scss';
+@import "./../../utils/colors.scss";
+@import "./../../utils/mixins.scss";
 
 .Profile {
   @include flex-center-all;
@@ -66,6 +66,11 @@
       display: flex;
       justify-content: flex-end;
       margin-top: 10px;
+      align-items: center;
+      .delete {
+        margin-right: 20px;
+        cursor: pointer;
+      }
     }
 
     .progress {

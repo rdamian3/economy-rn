@@ -1,32 +1,34 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import moment from 'moment';
-import { user, comunication } from './../../store/actions/index';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import moment from "moment";
+import { user, comunication } from "./../../store/actions/index";
 
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import './Profile.scss';
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Link from "@material-ui/core/Link";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+
+import "./Profile.scss";
 
 class Profile extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      email: '',
+      email: "",
       emailError: false,
-      displayName: '',
+      displayName: "",
       displayNameError: false,
-      password: '',
+      password: "",
       passwordError: false,
-      passwordRepeat: '',
+      passwordRepeat: "",
       passwordRepeatError: false
     };
   }
 
   handleEnterKeyPress = event => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       this.doUpdate();
     }
   };
@@ -80,10 +82,16 @@ class Profile extends Component {
       this.props.doUpdate(data);
     } else {
       this.props.setMessage({
-        message: 'Verifique los campos',
-        type: 'error',
-        kind: 'category'
+        message: "Verifique los campos",
+        type: "error",
+        kind: "category"
       });
+    }
+  };
+
+  doDelete = () => {
+    if (window.confirm("Quieres eliminar tu cuenta?")) {
+      this.props.doDelete();
     }
   };
 
@@ -107,15 +115,15 @@ class Profile extends Component {
                 <span>Miembro desde:</span>
                 <span>
                   {moment(this.props.userData.signupDate)
-                    .locale('es')
+                    .locale("es")
                     .utc()
-                    .format('DD/MM/YYYY')}
+                    .format("DD/MM/YYYY")}
                 </span>
               </div>
               <div className="image-container">
                 <img
                   className="image"
-                  src={require('./../../assets/avatar-placeholder.png')}
+                  src={require("./../../assets/avatar-placeholder.png")}
                   alt=""
                 />
                 <Button
@@ -134,32 +142,32 @@ class Profile extends Component {
             <div className="body">
               <TextField
                 error={emailError}
-                helperText={emailError ? 'El email es inválido' : null}
+                helperText={emailError ? "El email es inválido" : null}
                 id="email"
                 label="Email"
                 margin="normal"
                 onChange={this.handleOnEmailChange}
                 inputProps={{
-                  autoComplete: 'new-password',
+                  autoComplete: "new-password",
                   maxLength: 50,
                   form: {
-                    autoComplete: 'off'
+                    autoComplete: "off"
                   }
                 }}
                 value={email}
               />
               <TextField
                 error={displayNameError}
-                helperText={displayNameError ? 'Ingrese un nombre' : null}
+                helperText={displayNameError ? "Ingrese un nombre" : null}
                 id="name"
                 label="Nombre"
                 margin="normal"
                 onChange={this.handleOnDisplayNameChange}
                 inputProps={{
                   maxLength: 20,
-                  autoComplete: 'new-password',
+                  autoComplete: "new-password",
                   form: {
-                    autoComplete: 'off'
+                    autoComplete: "off"
                   }
                 }}
                 value={displayName}
@@ -167,6 +175,9 @@ class Profile extends Component {
             </div>
           </div>
           <div className="footer">
+            <Link color="error" onClick={this.doDelete} className="delete">
+              <span>Eliminar mi cuenta</span>
+            </Link>
             <Button color="primary" onClick={this.doUpdate} variant="contained">
               {this.props.isFetching ? (
                 <CircularProgress className="progress" size={24} />
@@ -187,6 +198,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   doUpdate: data => dispatch(user.doUpdate(data)),
+  doDelete: () => dispatch(user.doDelete()),
   setMessage: data => dispatch(comunication.setMessage(data))
 });
 

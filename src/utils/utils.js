@@ -1,1 +1,1 @@
-export const API_URL = 'https://vueconomy-api.herokuapp.com/api';
+export const API_URL = "http://localhost:3001/api";

@@ -1,15 +1,15 @@
-import axios from 'axios';
-import { comunication, movement, category } from './index';
-import { REMOVE_USER_DATA, SET_TOKEN, SET_USER_DATA } from './types';
-import { API_URL } from './../../utils/utils';
-import { userResponse } from './../../utils/responseHandler';
+import axios from "axios";
+import { comunication, movement, category } from "./index";
+import { REMOVE_USER_DATA, SET_TOKEN, SET_USER_DATA } from "./types";
+import { API_URL } from "./../../utils/utils";
+import { userResponse } from "./../../utils/responseHandler";
 
 export function doSignup(data) {
   return dispatch => {
     dispatch(comunication.startFetching());
     axios
       .post(
-        API_URL + '/signup',
+        API_URL + "/signup",
         {
           email: data.email,
           password: data.password,
@@ -17,14 +17,14 @@ export function doSignup(data) {
         },
         {
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
           }
         }
       )
       .then(res => {
         dispatch(setUserData(res.data.user));
-        localStorage.setItem('userData', JSON.stringify(res.data.user));
-        localStorage.setItem('userToken', res.data.token);
+        localStorage.setItem("userData", JSON.stringify(res.data.user));
+        localStorage.setItem("userToken", res.data.token);
         dispatch(setToken(res.data.token));
         dispatch(movement.getMovements());
         dispatch(category.getCategories());
@@ -33,8 +33,8 @@ export function doSignup(data) {
         dispatch(
           comunication.setMessage({
             message,
-            type: 'success',
-            kind: 'user-signup'
+            type: "success",
+            kind: "user-signup"
           })
         );
         dispatch(comunication.stopFetching());
@@ -44,8 +44,8 @@ export function doSignup(data) {
         dispatch(
           comunication.setMessage({
             message,
-            type: 'error',
-            kind: 'user'
+            type: "error",
+            kind: "user"
           })
         );
         dispatch(comunication.stopFetching());
@@ -59,18 +59,18 @@ export function doSignin(data) {
 
     axios
       .post(
-        API_URL + '/signin',
+        API_URL + "/signin",
         { email: data.email, password: data.password },
         {
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
           }
         }
       )
       .then(res => {
         dispatch(setUserData(res.data.user));
-        localStorage.setItem('userData', JSON.stringify(res.data.user));
-        localStorage.setItem('userToken', res.data.token);
+        localStorage.setItem("userData", JSON.stringify(res.data.user));
+        localStorage.setItem("userToken", res.data.token);
         dispatch(setToken(res.data.token));
         dispatch(movement.getMovements());
         dispatch(category.getCategories());
@@ -79,8 +79,8 @@ export function doSignin(data) {
         dispatch(
           comunication.setMessage({
             message,
-            type: 'success',
-            kind: 'user'
+            type: "success",
+            kind: "user"
           })
         );
         dispatch(comunication.stopFetching());
@@ -90,8 +90,8 @@ export function doSignin(data) {
         dispatch(
           comunication.setMessage({
             message,
-            type: 'error',
-            kind: 'user'
+            type: "error",
+            kind: "user"
           })
         );
         dispatch(comunication.stopFetching());
@@ -102,11 +102,11 @@ export function doSignin(data) {
 export function doUpdate(data) {
   return dispatch => {
     dispatch(comunication.startFetching());
-    const userData = JSON.parse(localStorage.getItem('userData'));
-    const userToken = localStorage.getItem('userToken');
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    const userToken = localStorage.getItem("userToken");
     axios
       .put(
-        API_URL + '/updateuser',
+        API_URL + "/updateuser",
         {
           userId: userData._id,
           email: data.email,
@@ -115,20 +115,19 @@ export function doUpdate(data) {
         },
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             authorization: userToken
           }
         }
       )
       .then(res => {
-        debugger;
         dispatch(setUserData(res.data.user));
-        localStorage.setItem('userData', JSON.stringify(res.data.user));
+        localStorage.setItem("userData", JSON.stringify(res.data.user));
         dispatch(
           comunication.setMessage({
-            message: 'Tus datos fueron actualizados',
-            type: 'success',
-            kind: 'user'
+            message: "Tus datos fueron actualizados",
+            type: "success",
+            kind: "user"
           })
         );
         dispatch(comunication.stopFetching());
@@ -138,8 +137,43 @@ export function doUpdate(data) {
         dispatch(
           comunication.setMessage({
             message: res.response.data.message,
-            type: 'error',
-            kind: 'user'
+            type: "error",
+            kind: "user"
+          })
+        );
+      });
+  };
+}
+
+export function doDelete() {
+  return dispatch => {
+    dispatch(comunication.startFetching());
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    const userToken = localStorage.getItem("userToken");
+    axios
+      .delete(API_URL + "/deleteuser/" + userData._id, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: userToken
+        }
+      })
+      .then(response => {
+        dispatch(
+          comunication.setMessage({
+            message: "Usuario eliminado",
+            type: "success",
+            kind: "user"
+          })
+        );
+        dispatch(removeUserData());
+        dispatch(comunication.stopFetching());
+      })
+      .catch(res => {
+        dispatch(
+          comunication.setMessage({
+            message: res.response.data.message,
+            type: "error",
+            kind: "user"
           })
         );
       });
@@ -151,20 +185,20 @@ export function doForgot(email) {
     dispatch(comunication.startFetching());
     axios
       .post(
-        API_URL + '/resetpassword',
+        API_URL + "/resetpassword",
         { email },
         {
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
           }
         }
       )
       .then(response => {
         dispatch(
           comunication.setMessage({
-            message: 'Te hemos enviado un email',
-            type: 'success',
-            kind: 'user'
+            message: "Te hemos enviado un email",
+            type: "success",
+            kind: "user"
           })
         );
       })
@@ -172,8 +206,8 @@ export function doForgot(email) {
         dispatch(
           comunication.setMessage({
             message: res.response.data.message,
-            type: 'error',
-            kind: 'user'
+            type: "error",
+            kind: "user"
           })
         );
       });

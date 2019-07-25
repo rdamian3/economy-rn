@@ -74,7 +74,6 @@ export function doSignin(data) {
         dispatch(setToken(res.data.token));
         dispatch(movement.getMovements());
         dispatch(category.getCategories());
-
         const message = userResponse(res);
         dispatch(
           comunication.setMessage({
@@ -86,6 +85,7 @@ export function doSignin(data) {
         dispatch(comunication.stopFetching());
       })
       .catch(res => {
+        dispatch(comunication.stopFetching());
         const message = userResponse(res.response);
         dispatch(
           comunication.setMessage({
@@ -94,7 +94,6 @@ export function doSignin(data) {
             kind: "user"
           })
         );
-        dispatch(comunication.stopFetching());
       });
   };
 }
@@ -210,6 +209,47 @@ export function doForgot(email) {
             kind: "user"
           })
         );
+      });
+  };
+}
+
+export function doUpload(file) {
+  return dispatch => {
+    dispatch(comunication.startFetching());
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    const userToken = localStorage.getItem("userToken");
+    let formData = new FormData();
+    formData.append("avatar", file);
+    axios
+      .post(API_URL + "/upload", formData, {
+        headers: {
+          "Content-type": "application/json",
+          authorization: userToken,
+          bucket: userData.bucket,
+          userId: userData._id
+        }
+      })
+      .then(res => {
+        debugger;
+        dispatch(setUserData(res.data.user));
+        dispatch(
+          comunication.setMessage({
+            message: "Foto actualizada!",
+            type: "success",
+            kind: "user"
+          })
+        );
+        dispatch(comunication.stopFetching());
+      })
+      .catch(res => {
+        dispatch(
+          comunication.setMessage({
+            message: "No pudimos actualizar tu foto.",
+            type: "error",
+            kind: "user"
+          })
+        );
+        dispatch(comunication.stopFetching());
       });
   };
 }

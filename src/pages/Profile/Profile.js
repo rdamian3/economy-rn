@@ -16,6 +16,7 @@ class Profile extends Component {
     super(props);
 
     this.state = {
+      avatar: "",
       email: "",
       emailError: false,
       displayName: "",
@@ -58,6 +59,30 @@ class Profile extends Component {
     this.setState({ passwordRepeat, passwordRepeatError });
   };
 
+  doUpload = evt => {
+    const img = evt.target.files[0];
+
+    if (!img) {
+      return;
+    }
+    if (img.type !== "image/jpeg" && img.type !== "image/png") {
+      return this.props.setMessage({
+        message: "Sólo se admiten imágenes",
+        type: "error",
+        kind: ""
+      });
+    }
+    if (img.size > 1000000) {
+      return this.props.setMessage({
+        message: "El tamaño máximo es de 1MB",
+        type: "error",
+        kind: ""
+      });
+    }
+
+    this.props.doUpload(img);
+  };
+
   doUpdate = () => {
     const {
       emailError,
@@ -95,13 +120,26 @@ class Profile extends Component {
     }
   };
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.userData !== this.props.userData) {
+      const { avatar, email, displayName } = this.props.userData;
+      this.setState({ avatar, email, displayName });
+    }
+  }
+
   componentDidMount() {
-    const { email, displayName } = this.props.userData;
-    this.setState({ email, displayName });
+    const { avatar, email, displayName } = this.props.userData;
+    this.setState({ avatar, email, displayName });
   }
 
   render() {
-    const { displayName, displayNameError, email, emailError } = this.state;
+    const {
+      avatar,
+      displayName,
+      displayNameError,
+      email,
+      emailError
+    } = this.state;
 
     return (
       <div className="Profile">
@@ -123,14 +161,23 @@ class Profile extends Component {
               <div className="image-container">
                 <img
                   className="image"
-                  src={require("./../../assets/avatar-placeholder.png")}
+                  src={
+                    avatar !== ""
+                      ? avatar
+                      : require("./../../assets/avatar-placeholder.png")
+                  }
                   alt=""
                 />
-                <Button
-                  size="small"
-                  onClick={this.doUpdate}
-                  variant="contained"
-                >
+                <Button variant="contained" component="label">
+                  <input
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    id="raised-button-file"
+                    multiple
+                    type="file"
+                    name="avatar"
+                    onChange={this.doUpload}
+                  />
                   {this.props.isFetching ? (
                     <CircularProgress className="progress" size={24} />
                   ) : (
@@ -197,6 +244,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
+  doUpload: data => dispatch(user.doUpload(data)),
   doUpdate: data => dispatch(user.doUpdate(data)),
   doDelete: () => dispatch(user.doDelete()),
   setMessage: data => dispatch(comunication.setMessage(data))

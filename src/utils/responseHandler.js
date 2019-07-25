@@ -1,4 +1,8 @@
 export function userResponse(response) {
+  if (!response) {
+    return "Error de conexion";
+  }
+
   switch (response.status) {
     case 200:
     case 201:
@@ -10,6 +14,6 @@ export function userResponse(response) {
     case 500:
       return "Usuario duplicado";
     default:
-      return "---";
+      return "Error";
   }
 }

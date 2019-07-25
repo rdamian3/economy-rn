@@ -230,7 +230,6 @@ export function doUpload(file) {
         }
       })
       .then(res => {
-        debugger;
         dispatch(setUserData(res.data.user));
         dispatch(
           comunication.setMessage({

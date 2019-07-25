@@ -56,14 +56,20 @@ class Header extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.userData !== this.props.userData) {
-      const { avatar, displayName } = this.props.userData;
+      let { avatar, displayName } = this.props.userData;
+      if (!avatar) {
+        avatar = "";
+      }
       this.setState({ avatar, displayName });
     }
   }
 
   componentDidMount() {
     if (this.props.userData !== null) {
-      const { avatar, displayName } = this.props.userData;
+      let { avatar, displayName } = this.props.userData;
+      if (!avatar) {
+        avatar = "";
+      }
       this.setState({ avatar, displayName });
     }
   }

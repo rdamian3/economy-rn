@@ -1,36 +1,34 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import moment from 'moment';
-import { category, comunication } from './../../store/actions/index';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import moment from "moment";
+import { category, comunication } from "./../../store/actions/index";
 
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import AddCategory from './../AddCategory/AddCategory';
-import AddIcon from '@material-ui/icons/Add';
-import AttachMoney from '@material-ui/icons/AttachMoney';
-import Description from '@material-ui/icons/Description';
-import Button from '@material-ui/core/Button';
-import DateRange from '@material-ui/icons/DateRange';
-import FormControl from '@material-ui/core/FormControl';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Modal from './../Modal/Modal';
-import MomentUtils from '@date-io/moment';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import AddCategory from "./../AddCategory/AddCategory";
+import AddIcon from "@material-ui/icons/Add";
+import AttachMoney from "@material-ui/icons/AttachMoney";
+import Description from "@material-ui/icons/Description";
+import Button from "@material-ui/core/Button";
+import DateRange from "@material-ui/icons/DateRange";
+import FormControl from "@material-ui/core/FormControl";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Modal from "./../Modal/Modal";
+import MomentUtils from "@date-io/moment";
+import Select from "@material-ui/core/Select";
+import TextField from "@material-ui/core/TextField";
 
-import './AddMovement.scss';
-import 'moment/locale/es';
+import "./AddMovement.scss";
+import "moment/locale/es";
 
 class AddMovement extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      childCategoryDesc: '',
-      childCategoryName: '',
-      amountError: false,
-      categoryError: false,
+      childCategoryDesc: "",
+      childCategoryName: "",
       isModalOpen: false
     };
   }
@@ -38,30 +36,33 @@ class AddMovement extends Component {
   addNewCategory = () => {
     const name = this.state.childCategoryName;
     const description = this.state.childCategoryDesc;
-    if (name !== '') {
+    if (name !== "") {
       this.props.addCategory({ name, description });
       this.toggleModal();
     } else {
       this.props.setMessage({
-        message: 'Verifique los campos',
-        type: 'error',
-        kind: 'category'
+        message: "Verifique los campos",
+        type: "error",
+        kind: "category"
       });
     }
   };
 
   handleAmountChange = event => {
-    this.setState({ amountError: event.target.value === 0 });
     this.props.handleNewMovement(event);
   };
 
   handleCategoryChange = event => {
-    const name = event.currentTarget.innerText;
-    const _id = event.target.value !== undefined ? event.target.value : '';
+    let name =
+      event.currentTarget.innerText !== "No hay cateogrías"
+        ? event.currentTarget.innerText
+        : "";
+
+    const _id = event.target.value !== undefined ? event.target.value : "";
 
     this.props.handleNewMovement({
       target: {
-        name: 'category',
+        name: "category",
         value: { name, _id }
       }
     });
@@ -69,13 +70,13 @@ class AddMovement extends Component {
 
   handleDateChange = date => {
     const utcDate = moment.utc(date).format();
-    const event = { target: { name: 'date', value: utcDate } };
+    const event = { target: { name: "date", value: utcDate } };
     this.props.handleNewMovement(event);
   };
 
   handleChildCategoryDesc = event => {
     const childCategoryDesc = event.target.value;
-    if (childCategoryDesc === '') {
+    if (childCategoryDesc === "") {
     }
     this.setState({ childCategoryDesc });
   };
@@ -90,11 +91,12 @@ class AddMovement extends Component {
 
   render() {
     const {
+      amountError,
+      categoryError,
       categories,
       typeOfMovement,
       newMovement,
-      handleNewMovement,
-      categoryError
+      handleNewMovement
     } = this.props;
 
     const cat = categories ? categories : [];
@@ -103,10 +105,10 @@ class AddMovement extends Component {
       <div className="Addmovement">
         <h1
           className={
-            'title ' + (typeOfMovement === 'income' ? 'positive' : 'negative')
+            "title " + (typeOfMovement === "income" ? "positive" : "negative")
           }
         >
-          {typeOfMovement === 'income' ? 'Ingreso' : 'Egreso'}
+          {typeOfMovement === "income" ? "Ingreso" : "Egreso"}
         </h1>
         <MuiPickersUtilsProvider utils={MomentUtils} locale="es">
           <DatePicker
@@ -124,13 +126,13 @@ class AddMovement extends Component {
           />
         </MuiPickersUtilsProvider>
         <TextField
-          error={this.state.amountError}
+          error={amountError}
           InputProps={{
             inputProps: { min: 0 },
             startAdornment: (
               <InputAdornment position="start">
                 <AttachMoney />
-                {typeOfMovement === 'income' ? null : '-'}
+                {typeOfMovement === "income" ? null : "-"}
               </InputAdornment>
             )
           }}
@@ -139,7 +141,6 @@ class AddMovement extends Component {
           name="amount"
           onChange={this.handleAmountChange}
           type="number"
-          value={newMovement.amount}
         />
         <TextField
           InputProps={{
@@ -156,15 +157,15 @@ class AddMovement extends Component {
           value={newMovement.description}
         />
         <FormControl className="category">
-          <InputLabel htmlFor="cat" error={this.state.categoryError}>
+          <InputLabel htmlFor="cat" error={categoryError}>
             Categoría
           </InputLabel>
           <Select
             className="select"
             error={categoryError}
             inputProps={{
-              name: 'category',
-              id: 'cat'
+              name: "category",
+              id: "cat"
             }}
             onChange={this.handleCategoryChange}
             value={newMovement.category._id}

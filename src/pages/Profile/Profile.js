@@ -122,13 +122,19 @@ class Profile extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.userData !== this.props.userData) {
-      const { avatar, email, displayName } = this.props.userData;
+      let { avatar, email, displayName } = this.props.userData;
+      if (!avatar) {
+        avatar = "";
+      }
       this.setState({ avatar, email, displayName });
     }
   }
 
   componentDidMount() {
-    const { avatar, email, displayName } = this.props.userData;
+    let { avatar, email, displayName } = this.props.userData;
+    if (!avatar) {
+      avatar = "";
+    }
     this.setState({ avatar, email, displayName });
   }
 

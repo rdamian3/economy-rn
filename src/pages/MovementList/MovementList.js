@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import { connect } from "react-redux";
 
-import { movement, comunication } from '../../store/actions/index';
-import Modal from '../../components/Modal/Modal';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
-import AddMovement from '../../components/AddMovement/AddMovement';
-import MovementsTable from '../../components/MovementsTable/MovementsTable';
+import { movement, comunication } from "../../store/actions/index";
+import Modal from "../../components/Modal/Modal";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import RemoveIcon from "@material-ui/icons/Remove";
+import AddMovement from "../../components/AddMovement/AddMovement";
+import MovementsTable from "../../components/MovementsTable/MovementsTable";
 
-import './MovementList.scss';
+import "./MovementList.scss";
 
 class MovementList extends Component {
   constructor(props) {
@@ -21,11 +21,11 @@ class MovementList extends Component {
       categoryError: false,
       newMovement: {
         amount: 0,
-        category: { name: '', _id: '' },
+        category: { name: "", _id: "" },
         date: new Date(),
-        description: ''
+        description: ""
       },
-      typeOfMovement: 'income'
+      typeOfMovement: "income"
     };
 
     this.getMovementsOnStartUp();
@@ -36,27 +36,41 @@ class MovementList extends Component {
     const value = event.target.value;
     const { amountError, categoryError } = this.state;
 
-    if (name === 'amount') {
-      this.setState({ amountError: value === '' });
+    if (name === "amount") {
+      this.setState({ amountError: value === 0 || value === "0" });
+      if (!amountError) {
+        this.setState(prevState => {
+          let newMovement = Object.assign({}, prevState.newMovement);
+          newMovement.amount = value;
+          return { newMovement };
+        });
+      }
     }
 
-    if (name === 'category') {
-      this.setState({ categoryError: value === '' });
-    }
-
-    if (!amountError && !categoryError) {
-      this.setState(prevState => {
-        let newMovement = Object.assign({}, prevState.newMovement);
-        newMovement[name] = value;
-        return { newMovement };
-      });
+    if (name === "category") {
+      this.setState({ categoryError: value._id === "" });
+      if (!categoryError) {
+        this.setState(prevState => {
+          let newMovement = Object.assign({}, prevState.newMovement);
+          newMovement.category = value;
+          return { newMovement };
+        });
+      }
     }
   };
 
   addNewMovement = () => {
     let { newMovement, typeOfMovement } = this.state;
-    if (newMovement.amount !== '' && newMovement.category.name !== '') {
-      if (typeOfMovement !== 'income') {
+    this.setState({ categoryError: newMovement.category.name === "" });
+    this.setState({
+      amountError: newMovement.amount === 0 || newMovement.amount === "0"
+    });
+    if (
+      newMovement.amount !== 0 &&
+      newMovement.amount !== "0" &&
+      newMovement.category.name !== ""
+    ) {
+      if (typeOfMovement !== "income") {
         newMovement.amount = -Math.abs(newMovement.amount);
       }
       this.props.addMovement(newMovement);
@@ -64,9 +78,9 @@ class MovementList extends Component {
       this.clearNewMovementState();
     } else {
       this.props.setMessage({
-        message: 'Verifique los campos',
-        type: 'error',
-        kind: 'category'
+        message: "Verifique los campos",
+        type: "error",
+        kind: "category"
       });
     }
   };
@@ -78,9 +92,9 @@ class MovementList extends Component {
   clearNewMovementState = () => {
     const newMovement = {
       amount: 0,
-      category: { name: '', _id: '' },
+      category: { name: "", _id: "" },
       date: new Date(),
-      description: ''
+      description: ""
     };
     this.setState({ newMovement });
   };
@@ -125,7 +139,7 @@ class MovementList extends Component {
           color="primary"
           disableFocusRipple
           disableRipple
-          onClick={() => this.toggleTypeOfMovement('income')}
+          onClick={() => this.toggleTypeOfMovement("income")}
         >
           <AddIcon />
         </Fab>
@@ -134,7 +148,7 @@ class MovementList extends Component {
           className="remove"
           disableFocusRipple
           disableRipple
-          onClick={() => this.toggleTypeOfMovement('expense')}
+          onClick={() => this.toggleTypeOfMovement("expense")}
         >
           <RemoveIcon />
         </Fab>

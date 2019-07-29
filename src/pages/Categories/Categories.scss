@@ -1,0 +1,30 @@
+@import "./../../utils/colors.scss";
+@import "./../../utils/mixins.scss";
+
+.Categories {
+  @include flex-center-all;
+  padding: 20px;
+
+  .card {
+    @include box-shadow;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10px 10px;
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .Reports {
+    padding: 0px 5px;
+    .container {
+      flex-wrap: wrap;
+      .date-from,
+      .date-to {
+        width: 90vw;
+        margin-bottom: 20px;
+      }
+    }
+  }
+}

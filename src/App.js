@@ -1,29 +1,30 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { BrowserRouter, Route } from 'react-router-dom';
-import { connect } from 'react-redux';
-import Header from './components/Header/Header';
-import Dashboard from './pages/Dashboard/Dashboard';
-import MovementList from './pages/MovementList/MovementList';
-import Signin from './pages/Signin/Signin';
-import Signup from './pages/Signup/Signup';
-import Forgot from './pages/Forgot/Forgot';
-import Profile from './pages/Profile/Profile';
-import Footer from './components/Footer/Footer';
-import Snack from './components/Snack/Snack';
+import { BrowserRouter, Route } from "react-router-dom";
+import { connect } from "react-redux";
+import Categories from "./pages/Categories/Categories";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import Footer from "./components/Footer/Footer";
+import Forgot from "./pages/Forgot/Forgot";
+import Header from "./components/Header/Header";
+import MovementList from "./pages/MovementList/MovementList";
+import Profile from "./pages/Profile/Profile";
+import Signin from "./pages/Signin/Signin";
+import Signup from "./pages/Signup/Signup";
+import Snack from "./components/Snack/Snack";
 
-import './App.scss';
-import Reports from './pages/Reports/Reports';
+import "./App.scss";
+import Reports from "./pages/Reports/Reports";
 
 class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <div className={'App ' + (this.props.userToken ? 'logged' : '')}>
+        <div className={"App " + (this.props.userToken ? "logged" : "")}>
           {this.props.userToken ? <Header /> : null}
           <Route
             exact
-            path={['/', '/home']}
+            path={["/", "/home"]}
             component={this.props.userToken ? Dashboard : Signin}
           />
           <Route
@@ -49,6 +50,10 @@ class App extends Component {
           <Route
             path="/report"
             component={this.props.userToken ? Reports : Signin}
+          />
+          <Route
+            path="/categories"
+            component={this.props.userToken ? Categories : Signin}
           />
           {this.props.userToken ? <Footer /> : null}
         </div>

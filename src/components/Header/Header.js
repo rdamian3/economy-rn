@@ -3,20 +3,21 @@ import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
 import "./Header.scss";
 
-import Hidden from "@material-ui/core/Hidden";
+import CategoryIcon from "@material-ui/icons/Category";
+import CloseIcon from "@material-ui/icons/Close";
+import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import Hidden from "@material-ui/core/Hidden";
+import HomeIcon from "@material-ui/icons/Home";
 import List from "@material-ui/core/List";
+import ListIcon from "@material-ui/icons/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListIcon from "@material-ui/icons/List";
 import MenuIcon from "@material-ui/icons/Menu";
-import HomeIcon from "@material-ui/icons/Home";
-import PrintIcon from "@material-ui/icons/Print";
 import PersonIcon from "@material-ui/icons/Person";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import CloseIcon from "@material-ui/icons/Close";
-import Divider from "@material-ui/core/Divider";
+import PrintIcon from "@material-ui/icons/Print";
 
 class Header extends Component {
   constructor(props) {
@@ -41,6 +42,11 @@ class Header extends Component {
           text: "Reportes",
           link: "/report",
           icon: <PrintIcon color={"primary"} />
+        },
+        {
+          text: "Categorías",
+          link: "/categories",
+          icon: <CategoryIcon color={"primary"} />
         }
       ]
     };

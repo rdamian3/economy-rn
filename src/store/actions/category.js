@@ -70,6 +70,52 @@ export function getCategories() {
   };
 }
 
+export function updateCategory(data) {
+  return dispatch => {
+    dispatch(comunication.startFetching());
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    const userToken = localStorage.getItem("userToken");
+    axios
+      .get(API_URL + "/category", {
+        params: { userId: userData._id },
+        headers: {
+          "Content-Type": "application/json",
+          authorization: userToken
+        }
+      })
+      .then(res => {
+        dispatch(setCategories(res.data.categories));
+        dispatch(comunication.stopFetching());
+      })
+      .catch(e => {
+        dispatch(comunication.stopFetching());
+      });
+  };
+}
+
+export function deleteCategory(data) {
+  debugger;
+  return dispatch => {
+    dispatch(comunication.startFetching());
+    const userToken = localStorage.getItem("userToken");
+    axios
+      .delete(API_URL + "/category", {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: userToken,
+          categoryId: data._id
+        }
+      })
+      .then(res => {
+        dispatch(setCategories(res.data.categories));
+        dispatch(comunication.stopFetching());
+      })
+      .catch(e => {
+        dispatch(comunication.stopFetching());
+      });
+  };
+}
+
 export function setCategories(data) {
   return {
     type: SET_CATEGORIES,

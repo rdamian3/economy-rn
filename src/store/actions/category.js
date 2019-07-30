@@ -94,7 +94,6 @@ export function updateCategory(data) {
 }
 
 export function deleteCategory(data) {
-  debugger;
   return dispatch => {
     dispatch(comunication.startFetching());
     const userToken = localStorage.getItem("userToken");
@@ -107,7 +106,7 @@ export function deleteCategory(data) {
         }
       })
       .then(res => {
-        dispatch(setCategories(res.data.categories));
+        dispatch(getCategories());
         dispatch(comunication.stopFetching());
       })
       .catch(e => {

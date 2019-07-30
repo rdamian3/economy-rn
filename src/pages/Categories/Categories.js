@@ -22,23 +22,11 @@ class Categories extends Component {
     super(props);
 
     this.state = {
-      columns: [
-        { title: "Fecha", field: "date" },
-        { title: "Monto", field: "amount" },
-        { title: "Descripción", field: "description" }
-      ],
       isModalOpen: false,
       categories: [],
       page: 0,
       rowsPerPage: 8,
-      sortBy: { type: "date", asc: true },
-      movementToEdit: {
-        amount: 0,
-        category: { name: "", _id: "" },
-        date: "",
-        description: "",
-        _id: ""
-      }
+      sortBy: { type: "date", asc: true }
     };
   }
 
@@ -49,7 +37,6 @@ class Categories extends Component {
 
   doSort = (a, b) => {
     const { sortBy } = this.state;
-    debugger;
     if (!sortBy.asc) {
       return a[sortBy.type] > b[sortBy.type] ? 1 : -1;
     } else {
@@ -79,11 +66,28 @@ class Categories extends Component {
     this.setState({ isModalOpen: !this.state.isModalOpen });
   };
 
-  render() {
-    const categories = this.props.categories;
-    if (categories.length === 0) {
-      return null;
+  componentDidUpdate(prevState) {
+    if (prevState.categories !== this.props.categories) {
+      this.setState({ categories: this.props.categories });
     }
+  }
+
+  componentDidMount() {
+    this.setState({ categories: this.props.categories });
+  }
+
+  render() {
+    const { categories } = this.state;
+    if (categories.length === 0) {
+      return (
+        <div className="Categories">
+          <div className="card no-category">
+            <span>Aún no hay categorías para mostrar!</span>
+          </div>
+        </div>
+      );
+    }
+
     const { page, rowsPerPage, sortBy } = this.state;
 
     return (

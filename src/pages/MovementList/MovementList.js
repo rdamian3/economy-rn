@@ -31,34 +31,6 @@ class MovementList extends Component {
     this.getMovementsOnStartUp();
   }
 
-  handleNewMovement = event => {
-    const name = event.target.name;
-    const value = event.target.value;
-    const { amountError, categoryError } = this.state;
-
-    if (name === "amount") {
-      this.setState({ amountError: value === 0 || value === "0" });
-      if (!amountError) {
-        this.setState(prevState => {
-          let newMovement = Object.assign({}, prevState.newMovement);
-          newMovement.amount = value;
-          return { newMovement };
-        });
-      }
-    }
-
-    if (name === "category") {
-      this.setState({ categoryError: value._id === "" });
-      if (!categoryError) {
-        this.setState(prevState => {
-          let newMovement = Object.assign({}, prevState.newMovement);
-          newMovement.category = value;
-          return { newMovement };
-        });
-      }
-    }
-  };
-
   addNewMovement = () => {
     let { newMovement, typeOfMovement } = this.state;
     this.setState({ categoryError: newMovement.category.name === "" });
@@ -74,8 +46,8 @@ class MovementList extends Component {
         newMovement.amount = -Math.abs(newMovement.amount);
       }
       this.props.addMovement(newMovement);
-      this.toggleModal();
       this.clearNewMovementState();
+      this.toggleModal();
     } else {
       this.props.setMessage({
         message: "Verifique los campos",
@@ -83,10 +55,6 @@ class MovementList extends Component {
         kind: "category"
       });
     }
-  };
-
-  getMovementsOnStartUp = () => {
-    this.props.getMovements();
   };
 
   clearNewMovementState = () => {
@@ -97,6 +65,39 @@ class MovementList extends Component {
       description: ""
     };
     this.setState({ newMovement });
+  };
+
+  dynamicStateChanger = (name, value) => {
+    this.setState(prevState => {
+      let newMovement = Object.assign({}, prevState.newMovement);
+      newMovement[name] = value;
+      return { newMovement };
+    });
+  };
+
+  getMovementsOnStartUp = () => {
+    this.props.getMovements();
+  };
+
+  handleNewMovement = event => {
+    const { name, value } = event.target;
+    const { amountError, categoryError } = this.state;
+
+    if (name === "amount") {
+      this.setState({ amountError: value === 0 || value === "0" });
+      if (!amountError) {
+        return this.dynamicStateChanger(name, value);
+      }
+    }
+
+    if (name === "category") {
+      this.setState({ categoryError: value._id === "" });
+      if (!categoryError) {
+        return this.dynamicStateChanger(name, value);
+      }
+    }
+
+    this.dynamicStateChanger(name, value);
   };
 
   toggleModal = () => {

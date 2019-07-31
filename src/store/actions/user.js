@@ -124,15 +124,18 @@ export function doUpdate(data) {
         }
       )
       .then(res => {
-        dispatch(sessionHandler(res.data.user));
         dispatch(
-          comunication.setMessage({
-            message: "Tus datos fueron actualizados",
-            type: "success",
-            kind: "user"
+          sessionHandler(res.data.user, userToken, () => {
+            dispatch(
+              comunication.setMessage({
+                message: "Tus datos fueron actualizados",
+                type: "success",
+                kind: "user"
+              })
+            );
+            dispatch(comunication.stopFetching());
           })
         );
-        dispatch(comunication.stopFetching());
       })
       .catch(res => {
         dispatch(comunication.stopFetching());
@@ -233,15 +236,18 @@ export function doUpload(file) {
         }
       })
       .then(res => {
-        dispatch(sessionHandler(res.data.user));
         dispatch(
-          comunication.setMessage({
-            message: "Foto actualizada!",
-            type: "success",
-            kind: "user"
+          sessionHandler(res.data.user, userToken, () => {
+            dispatch(
+              comunication.setMessage({
+                message: "Foto actualizada!",
+                type: "success",
+                kind: "user"
+              })
+            );
+            dispatch(comunication.stopFetching());
           })
         );
-        dispatch(comunication.stopFetching());
       })
       .catch(res => {
         dispatch(

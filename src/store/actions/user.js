@@ -22,22 +22,24 @@ export function doSignup(data) {
         }
       )
       .then(res => {
-        dispatch(setUserData(res.data.user));
-        localStorage.setItem("userData", JSON.stringify(res.data.user));
-        localStorage.setItem("userToken", res.data.token);
-        dispatch(setToken(res.data.token));
-        dispatch(movement.getMovements());
-        dispatch(category.getCategories());
-
-        const message = userResponse(res);
+        const userData = res.data.user;
+        const userToken = res.data.token;
         dispatch(
-          comunication.setMessage({
-            message,
-            type: "success",
-            kind: "user-signup"
+          sessionHandler(userData, userToken, () => {
+            dispatch(movement.getMovements());
+            dispatch(category.getCategories());
+
+            const message = userResponse(res);
+            dispatch(
+              comunication.setMessage({
+                message,
+                type: "success",
+                kind: "user-signup"
+              })
+            );
+            dispatch(comunication.stopFetching());
           })
         );
-        dispatch(comunication.stopFetching());
       })
       .catch(res => {
         const message = userResponse(res.response);
@@ -68,21 +70,23 @@ export function doSignin(data) {
         }
       )
       .then(res => {
-        dispatch(setUserData(res.data.user));
-        localStorage.setItem("userData", JSON.stringify(res.data.user));
-        localStorage.setItem("userToken", res.data.token);
-        dispatch(setToken(res.data.token));
-        dispatch(movement.getMovements());
-        dispatch(category.getCategories());
-        const message = userResponse(res);
+        const userData = res.data.user;
+        const userToken = res.data.token;
         dispatch(
-          comunication.setMessage({
-            message,
-            type: "success",
-            kind: "user"
+          sessionHandler(userData, userToken, () => {
+            dispatch(movement.getMovements());
+            dispatch(category.getCategories());
+            const message = userResponse(res);
+            dispatch(
+              comunication.setMessage({
+                message,
+                type: "success",
+                kind: "user"
+              })
+            );
+            dispatch(comunication.stopFetching());
           })
         );
-        dispatch(comunication.stopFetching());
       })
       .catch(res => {
         dispatch(comunication.stopFetching());
@@ -120,8 +124,7 @@ export function doUpdate(data) {
         }
       )
       .then(res => {
-        dispatch(setUserData(res.data.user));
-        localStorage.setItem("userData", JSON.stringify(res.data.user));
+        dispatch(sessionHandler(res.data.user));
         dispatch(
           comunication.setMessage({
             message: "Tus datos fueron actualizados",
@@ -230,7 +233,7 @@ export function doUpload(file) {
         }
       })
       .then(res => {
-        dispatch(setUserData(res.data.user));
+        dispatch(sessionHandler(res.data.user));
         dispatch(
           comunication.setMessage({
             message: "Foto actualizada!",
@@ -250,6 +253,43 @@ export function doUpload(file) {
         );
         dispatch(comunication.stopFetching());
       });
+  };
+}
+
+export function sessionHandler(userData, userToken, cb) {
+  return dispatch => {
+    const testToken = userToken ? userToken : localStorage.getItem("userToken");
+    const testData = userData
+      ? userData
+      : JSON.parse(localStorage.getItem("userData"));
+
+    if (testToken !== "undefined" && testToken !== null) {
+      axios
+        .get(API_URL + "/hasauth", {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: testToken
+          }
+        })
+        .then(res => {
+          localStorage.setItem("userData", JSON.stringify(testData));
+          localStorage.setItem("userToken", testToken);
+          dispatch(setUserData(testData));
+          dispatch(setToken(testToken));
+          cb();
+        })
+        .catch(e => {
+          console.log(e);
+          if (e.response.status === 401) {
+            localStorage.removeItem("userToken");
+            localStorage.removeItem("userData");
+            dispatch(removeUserData());
+            cb();
+          }
+        });
+    } else if (cb) {
+      cb();
+    }
   };
 }
 

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 
 import { BrowserRouter, Route } from "react-router-dom";
 import { connect } from "react-redux";
+import { user } from "./store/actions/index";
+
 import Categories from "./pages/Categories/Categories";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Footer from "./components/Footer/Footer";
@@ -17,8 +19,29 @@ import "./App.scss";
 import Reports from "./pages/Reports/Reports";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loaded: false
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.userToken !== this.props.userToken) {
+      this.props.sessionHandler(null, null, () => {
+        this.setState({ loaded: true });
+      });
+    }
+  }
+
+  componentDidMount() {
+    this.props.sessionHandler(null, null, () => {
+      this.setState({ loaded: true });
+    });
+  }
+
   render() {
-    return (
+    return this.state.loaded ? (
       <BrowserRouter>
         <div className={"App " + (this.props.userToken ? "logged" : "")}>
           {this.props.userToken ? <Header /> : null}
@@ -59,7 +82,7 @@ class App extends Component {
         </div>
         <Snack />
       </BrowserRouter>
-    );
+    ) : null;
   }
 }
 
@@ -67,4 +90,12 @@ const mapStateToProps = state => {
   return { userToken: state.userToken };
 };
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => ({
+  sessionHandler: (param, param2, param3) =>
+    dispatch(user.sessionHandler(param, param2, param3))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);

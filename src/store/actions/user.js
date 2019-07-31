@@ -293,11 +293,17 @@ export function sessionHandler(userData, userToken, cb) {
           cb();
         })
         .catch(e => {
-          console.log(e);
           if (e.response.status === 401) {
             localStorage.removeItem("userToken");
             localStorage.removeItem("userData");
             dispatch(removeUserData());
+            dispatch(
+              comunication.setMessage({
+                message: "Su sesión ha expirado...",
+                type: "error",
+                kind: "user"
+              })
+            );
             cb();
           }
         });

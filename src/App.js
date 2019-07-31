@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import { BrowserRouter, Route } from "react-router-dom";
 import { connect } from "react-redux";
-import { user } from "./store/actions/index";
+import { session } from "./store/actions/index";
 
 import Categories from "./pages/Categories/Categories";
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -92,7 +92,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   sessionHandler: (param, param2, param3) =>
-    dispatch(user.sessionHandler(param, param2, param3))
+    dispatch(session.sessionHandler(param, param2, param3))
 });
 
 export default connect(

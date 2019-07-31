@@ -1,5 +1,5 @@
 import axios from "axios";
-import { comunication } from "./index";
+import { comunication, session } from "./index";
 import { API_URL } from "./../../utils/utils";
 import {
   SET_MOVEMENTS,
@@ -13,43 +13,45 @@ export function addMovement(data) {
     dispatch(comunication.startFetching());
     const userData = JSON.parse(localStorage.getItem("userData"));
     const userToken = localStorage.getItem("userToken");
-    axios
-      .post(
-        API_URL + "/movement",
-        {
-          amount: data.amount,
-          category: data.category,
-          date: data.date,
-          description: data.description,
-          userId: userData._id
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            authorization: userToken
+    session.sessionHandler(userData, userToken, () => {
+      axios
+        .post(
+          API_URL + "/movement",
+          {
+            amount: data.amount,
+            category: data.category,
+            date: data.date,
+            description: data.description,
+            userId: userData._id
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              authorization: userToken
+            }
           }
-        }
-      )
-      .then(res => {
-        dispatch(
-          comunication.setMessage({
-            message: "Movimiento agregado",
-            type: "success",
-            kind: "movement"
-          })
-        );
-        dispatch(getMovements());
-      })
-      .catch(e => {
-        dispatch(
-          comunication.setMessage({
-            message: e.response.data.message,
-            type: "error",
-            kind: "movement"
-          })
-        );
-        dispatch(comunication.stopFetching());
-      });
+        )
+        .then(res => {
+          dispatch(
+            comunication.setMessage({
+              message: "Movimiento agregado",
+              type: "success",
+              kind: "movement"
+            })
+          );
+          dispatch(getMovements());
+        })
+        .catch(e => {
+          dispatch(
+            comunication.setMessage({
+              message: e.response.data.message,
+              type: "error",
+              kind: "movement"
+            })
+          );
+          dispatch(comunication.stopFetching());
+        });
+    });
   };
 }
 
@@ -58,32 +60,35 @@ export function getMovements() {
     dispatch(comunication.startFetching());
     const userData = JSON.parse(localStorage.getItem("userData"));
     const userToken = localStorage.getItem("userToken");
-    axios
-      .get(API_URL + "/movement", {
-        params: { userId: userData._id },
-        headers: {
-          "Content-Type": "application/json",
-          authorization: userToken
-        }
-      })
-      .then(res => {
-        if (res) {
-          dispatch(setMovements(res.data.movements));
-          dispatch(calculateTotal(res.data.movements));
-          dispatch(filterMovementsByAmountAndCategory(res.data.movements));
-        }
-        dispatch(comunication.stopFetching());
-      })
-      .catch(e => {
-        dispatch(
-          comunication.setMessage({
-            message: e.response.data.message,
-            type: "error",
-            kind: "movement"
-          })
-        );
-        dispatch(comunication.stopFetching());
-      });
+    debugger;
+    session.sessionHandler(userData, userToken, () => {
+      axios
+        .get(API_URL + "/movement", {
+          params: { userId: userData._id },
+          headers: {
+            "Content-Type": "application/json",
+            authorization: userToken
+          }
+        })
+        .then(res => {
+          if (res) {
+            dispatch(setMovements(res.data.movements));
+            dispatch(calculateTotal(res.data.movements));
+            dispatch(filterMovementsByAmountAndCategory(res.data.movements));
+          }
+          dispatch(comunication.stopFetching());
+        })
+        .catch(e => {
+          dispatch(
+            comunication.setMessage({
+              message: e.response.data.message,
+              type: "error",
+              kind: "movement"
+            })
+          );
+          dispatch(comunication.stopFetching());
+        });
+    });
   };
 }
 

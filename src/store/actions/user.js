@@ -262,6 +262,14 @@ export function doUpload(file) {
   };
 }
 
+export function doLogout() {
+  return dispatch => {
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("userData");
+    dispatch(removeUserData());
+  };
+}
+
 export function sessionHandler(userData, userToken, cb) {
   return dispatch => {
     const testToken = userToken ? userToken : localStorage.getItem("userToken");

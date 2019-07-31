@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
+import { user } from "./../../store/actions/index";
 import "./Header.scss";
 
 import CategoryIcon from "@material-ui/icons/Category";
@@ -51,6 +52,10 @@ class Header extends Component {
       ]
     };
   }
+
+  doLogout = () => {
+    this.props.doLogout();
+  };
 
   toggleOpenDrawer = () => {
     this.setState({ isOpen: !this.state.isOpen });
@@ -141,7 +146,7 @@ class Header extends Component {
               <PersonIcon />
               <span>Tu perfil</span>
             </li>
-            <li>
+            <li onClick={this.doLogout}>
               <ExitToAppIcon />
               <span>Salir</span>
             </li>
@@ -156,4 +161,13 @@ const mapStateToProps = state => {
   return { userData: state.userData };
 };
 
-export default withRouter(connect(mapStateToProps)(Header));
+const mapDispatchToProps = dispatch => ({
+  doLogout: () => dispatch(user.doLogout())
+});
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Header)
+);

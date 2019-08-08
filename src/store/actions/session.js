@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { comunication } from './index';
 import { REMOVE_USER_DATA, SET_TOKEN, SET_USER_DATA } from './types';
-import { API_URL } from '../../utils/utils';
+import API_URL from '../../utils/utils';
 
 export function setUserData(data) {
   return {

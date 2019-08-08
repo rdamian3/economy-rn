@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { session } from './store/actions/index';
@@ -26,59 +26,39 @@ class App extends Component {
     };
   }
 
+  componentDidMount() {
+    const { sessionHandler } = this.props;
+    sessionHandler(null, null, () => {
+      this.setState({ loaded: true });
+    });
+  }
+
   componentDidUpdate(prevProps) {
-    if (prevProps.userToken !== this.props.userToken) {
-      this.props.sessionHandler(null, null, () => {
+    const { userToken, sessionHandler } = this.props;
+    if (prevProps.userToken !== userToken) {
+      sessionHandler(null, null, () => {
         this.setState({ loaded: true });
       });
     }
   }
 
-  componentDidMount() {
-    this.props.sessionHandler(null, null, () => {
-      this.setState({ loaded: true });
-    });
-  }
-
   render() {
-    return this.state.loaded ? (
+    const { loaded } = this.state;
+    const { userToken } = this.props;
+
+    return loaded ? (
       <BrowserRouter>
-        <div className={`App ${this.props.userToken ? 'logged' : ''}`}>
-          {this.props.userToken ? <Header /> : null}
-          <Route
-            exact
-            path={['/', '/home']}
-            component={this.props.userToken ? Dashboard : Signin}
-          />
-          <Route
-            path="/signin"
-            component={this.props.userToken ? Dashboard : Signin}
-          />
-          <Route
-            path="/signup"
-            component={this.props.userToken ? Dashboard : Signup}
-          />
-          <Route
-            path="/forgot"
-            component={this.props.userToken ? Dashboard : Forgot}
-          />
-          <Route
-            path="/list"
-            component={this.props.userToken ? MovementList : Signin}
-          />
-          <Route
-            path="/profile"
-            component={this.props.userToken ? Profile : Signin}
-          />
-          <Route
-            path="/report"
-            component={this.props.userToken ? Reports : Signin}
-          />
-          <Route
-            path="/categories"
-            component={this.props.userToken ? Categories : Signin}
-          />
-          {this.props.userToken ? <Footer /> : null}
+        <div className={`App ${userToken ? 'logged' : ''}`}>
+          {userToken ? <Header /> : null}
+          <Route exact path={['/', '/home']} component={userToken ? Dashboard : Signin} />
+          <Route path="/signin" component={userToken ? Dashboard : Signin} />
+          <Route path="/signup" component={userToken ? Dashboard : Signup} />
+          <Route path="/forgot" component={userToken ? Dashboard : Forgot} />
+          <Route path="/list" component={userToken ? MovementList : Signin} />
+          <Route path="/profile" component={userToken ? Profile : Signin} />
+          <Route path="/report" component={userToken ? Reports : Signin} />
+          <Route path="/categories" component={userToken ? Categories : Signin} />
+          {userToken ? <Footer /> : null}
         </div>
         <Snack />
       </BrowserRouter>
@@ -86,10 +66,21 @@ class App extends Component {
   }
 }
 
+App.propTypes = {
+  sessionHandler: PropTypes.func.isRequired,
+  userToken: PropTypes.string,
+};
+
+App.defaultProps = {
+  userToken: '',
+};
+
 const mapStateToProps = state => ({ userToken: state.userToken });
 
 const mapDispatchToProps = dispatch => ({
-  sessionHandler: (param, param2, param3) => dispatch(session.sessionHandler(param, param2, param3)),
+  sessionHandler: (param, param2, param3) => {
+    dispatch(session.sessionHandler(param, param2, param3));
+  },
 });
 
 export default connect(

@@ -2,8 +2,8 @@ import axios from 'axios';
 import {
   comunication, movement, category, session,
 } from './index';
-import { API_URL } from '../../utils/utils';
-import { userResponse } from '../../utils/responseHandler';
+import API_URL from '../../utils/utils';
+import userResponse from '../../utils/responseHandler';
 
 export function doSignup(data) {
   return (dispatch) => {

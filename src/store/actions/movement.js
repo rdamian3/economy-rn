@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { comunication, session } from './index';
-import { API_URL } from '../../utils/utils';
+import API_URL from '../../utils/utils';
 import {
   SET_MOVEMENTS,
   SET_TOTAL,

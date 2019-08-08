@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 
 import './AddCategory.scss';
@@ -8,33 +9,38 @@ class AddCategory extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nameError: false
+      nameError: false,
     };
   }
 
-  handleCategoryName = evt => {
+  handleCategoryName = (evt) => {
     const name = evt.target.value;
     this.setState({ nameError: name === '' });
-    this.props.childCategoryName(name);
+    const { childCategoryName } = this.props;
+    childCategoryName(name);
   };
 
   render() {
+    const { nameError } = this.state;
+    const { childCategoryDesc } = this.props;
+
     return (
       <div className="Addcategory">
         <TextField
-          error={this.state.nameError}
+          error={nameError}
           label="Nombre"
           margin="normal"
           onChange={this.handleCategoryName}
         />
-        <TextField
-          label="Descripción"
-          margin="normal"
-          onChange={this.props.childCategoryDesc}
-        />
+        <TextField label="Descripción" margin="normal" onChange={childCategoryDesc} />
       </div>
     );
   }
 }
+
+AddCategory.propTypes = {
+  childCategoryName: PropTypes.func.isRequired,
+  childCategoryDesc: PropTypes.func.isRequired,
+};
 
 export default AddCategory;

@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import { movement } from './../../store/actions/index';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import EditMovement from '../EditMovement/EditMovement';
 import IconButton from '@material-ui/core/IconButton';
-import Modal from '../Modal/Modal';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -16,6 +13,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Modal from '../Modal/Modal';
+import EditMovement from '../EditMovement/EditMovement';
+import { movement } from '../../store/actions/index';
 import './MovementsTable.scss';
 
 class MovementsTable extends Component {
@@ -23,13 +23,7 @@ class MovementsTable extends Component {
     super(props);
 
     this.state = {
-      columns: [
-        { title: 'Fecha', field: 'date' },
-        { title: 'Monto', field: 'amount' },
-        { title: 'Descripción', field: 'description' }
-      ],
       isModalOpen: false,
-      movs: [],
       page: 0,
       rowsPerPage: 8,
       sortBy: { type: 'date', asc: true },
@@ -38,12 +32,12 @@ class MovementsTable extends Component {
         category: { name: '', _id: '' },
         date: '',
         description: '',
-        _id: ''
-      }
+        _id: '',
+      },
     };
   }
 
-  setSort = type => {
+  setSort = (type) => {
     const sortBy = { type, asc: !this.state.sortBy.asc };
     this.setState({ sortBy });
   };
@@ -53,9 +47,9 @@ class MovementsTable extends Component {
     if (!sortBy.asc) {
       if (sortBy.type === 'date') {
         return a[sortBy.type] > b[sortBy.type] ? 1 : -1;
-      } else if (sortBy.type === 'category') {
+      } if (sortBy.type === 'category') {
         return a[sortBy.type].name > b[sortBy.type].name ? 1 : -1;
-      } else if (sortBy.type === 'amount') {
+      } if (sortBy.type === 'amount') {
         return a[sortBy.type] - b[sortBy.type];
       }
     }
@@ -63,9 +57,9 @@ class MovementsTable extends Component {
     if (sortBy.asc) {
       if (sortBy.type === 'date') {
         return a[sortBy.type] > b[sortBy.type] ? -1 : 1;
-      } else if (sortBy.type === 'category') {
+      } if (sortBy.type === 'category') {
         return a[sortBy.type].name > b[sortBy.type].name ? -1 : 1;
-      } else if (sortBy.type === 'amount') {
+      } if (sortBy.type === 'amount') {
         return b[sortBy.type] - a[sortBy.type];
       }
     }
@@ -79,27 +73,27 @@ class MovementsTable extends Component {
     this.setState({ page });
   };
 
-  handleChangeRowsPerPage = event => {
+  handleChangeRowsPerPage = (event) => {
     const rowsPerPage = parseInt(event.target.value, 5);
     this.setState({ rowsPerPage });
   };
 
-  handleEditMovement = event => {
-    const name = event.target.name;
-    const value = event.target.value;
-    this.setState(prevState => {
-      let movementToEdit = Object.assign({}, prevState.movementToEdit);
+  handleEditMovement = (event) => {
+    const { name } = event.target;
+    const { value } = event.target;
+    this.setState((prevState) => {
+      const movementToEdit = Object.assign({}, prevState.movementToEdit);
       movementToEdit[name] = value;
       return { movementToEdit };
     });
   };
 
-  handleUpdateMovement = data => {
+  handleUpdateMovement = (data) => {
     this.setState({ movementToEdit: data });
     this.toggleModal();
   };
 
-  handleDeleteMovement = data => {
+  handleDeleteMovement = (data) => {
     this.props.deleteMovement(data);
   };
 
@@ -108,10 +102,7 @@ class MovementsTable extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.message !== this.props.message &&
-      this.props.message.kind === 'movement_update'
-    ) {
+    if (prevProps.message !== this.props.message && this.props.message.kind === 'movement_update') {
       this.props.message.type === 'success' && this.toggleModal();
     }
   }
@@ -173,8 +164,8 @@ class MovementsTable extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {movs.length !== 0 &&
-              movs
+            {movs.length !== 0
+              && movs
                 .sort((a, b) => this.doSort(a, b))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
@@ -204,7 +195,8 @@ class MovementsTable extends Component {
                         {formattedDate}
                       </TableCell>
                       <TableCell align="left" className="amount-cell">
-                        ${row.amount}
+                        $
+                        {row.amount}
                       </TableCell>
                       <TableCell align="left" className="category-cell">
                         {row.category.name}
@@ -239,10 +231,9 @@ class MovementsTable extends Component {
                 <span>BALANCE:</span>
               </TableCell>
               <TableCell align="left" className="foot-cell">
-                <span
-                  className={this.props.total > 0 ? 'positive' : 'negative'}
-                >
-                  ${this.props.total}
+                <span className={this.props.total > 0 ? 'positive' : 'negative'}>
+                  $
+                  {this.props.total}
                 </span>
               </TableCell>
 
@@ -255,11 +246,9 @@ class MovementsTable extends Component {
                 rowsPerPage={this.state.rowsPerPage}
                 onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 SelectProps={{
-                  native: true
+                  native: true,
                 }}
-                labelDisplayedRows={({ from, to, count }) =>
-                  `${from}-${to} de ${count}`
-                }
+                labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
               />
             </TableRow>
           </TableFooter>
@@ -283,16 +272,14 @@ class MovementsTable extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { total: state.total, message: state.message };
-};
+const mapStateToProps = state => ({ total: state.total, message: state.message });
 
 const mapDispatchToProps = dispatch => ({
   updateMovement: data => dispatch(movement.updateMovement(data)),
-  deleteMovement: data => dispatch(movement.deleteMovement(data))
+  deleteMovement: data => dispatch(movement.deleteMovement(data)),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(MovementsTable);

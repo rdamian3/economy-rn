@@ -163,13 +163,28 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-  userData: PropTypes.objectOf,
+  userData: PropTypes.shape({
+    signupDate: PropTypes.string,
+    _id: PropTypes.string,
+    email: PropTypes.string,
+    displayName: PropTypes.string,
+    avatar: PropTypes.string,
+    bucket: PropTypes.string,
+  }),
   doLogout: PropTypes.func.isRequired,
-  history: PropTypes.func.isRequired,
+  history: PropTypes.object,
 };
 
 Header.defaultProps = {
-  userData: {},
+  userData: {
+    signupDate: '',
+    _id: '',
+    email: '',
+    displayName: '',
+    avatar: '',
+    bucket: '',
+  },
+  history: null,
 };
 
 const mapStateToProps = state => ({ userData: state.userData });

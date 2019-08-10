@@ -1,82 +1,82 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import moment from "moment";
-import { user, comunication } from "./../../store/actions/index";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import moment from 'moment';
 
-import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Link from "@material-ui/core/Link";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Link from '@material-ui/core/Link';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import { user, comunication } from '../../store/actions/index';
 
-import "./Profile.scss";
+import './Profile.scss';
 
 class Profile extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      avatar: "",
-      email: "",
+      avatar: '',
+      email: '',
       emailError: false,
-      displayName: "",
+      displayName: '',
       displayNameError: false,
-      password: "",
+      password: '',
       passwordError: false,
-      passwordRepeat: "",
-      passwordRepeatError: false
+      passwordRepeat: '',
+      passwordRepeatError: false,
     };
   }
 
-  handleEnterKeyPress = event => {
-    if (event.key === "Enter") {
+  handleEnterKeyPress = (event) => {
+    if (event.key === 'Enter') {
       this.doUpdate();
     }
   };
 
-  handleOnEmailChange = event => {
+  handleOnEmailChange = (event) => {
     const email = event.target.value;
     const regEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     const emailError = regEx.test(String(email).toLowerCase());
     this.setState({ email, emailError: !emailError });
   };
 
-  handleOnDisplayNameChange = event => {
+  handleOnDisplayNameChange = (event) => {
     const displayName = event.target.value;
     const displayNameError = displayName.length < 2;
     this.setState({ displayName, displayNameError });
   };
 
-  handleOnPasswordChange = event => {
+  handleOnPasswordChange = (event) => {
     const password = event.target.value;
     const passwordError = password.length < 8;
     this.setState({ password, passwordError });
   };
 
-  handleOnPasswordRepeatChange = event => {
+  handleOnPasswordRepeatChange = (event) => {
     const passwordRepeat = event.target.value;
     const passwordRepeatError = passwordRepeat !== this.state.password;
     this.setState({ passwordRepeat, passwordRepeatError });
   };
 
-  doUpload = evt => {
+  doUpload = (evt) => {
     const img = evt.target.files[0];
 
     if (!img) {
       return;
     }
-    if (img.type !== "image/jpeg" && img.type !== "image/png") {
+    if (img.type !== 'image/jpeg' && img.type !== 'image/png') {
       return this.props.setMessage({
-        message: "Sólo se admiten imágenes",
-        type: "error",
-        kind: ""
+        message: 'Sólo se admiten imágenes',
+        type: 'error',
+        kind: '',
       });
     }
     if (img.size > 1000000) {
       return this.props.setMessage({
-        message: "El tamaño máximo es de 1MB",
-        type: "error",
-        kind: ""
+        message: 'El tamaño máximo es de 1MB',
+        type: 'error',
+        kind: '',
       });
     }
 
@@ -90,32 +90,27 @@ class Profile extends Component {
       displayNameError,
       passwordRepeatError,
       email,
-      displayName
+      displayName,
     } = this.state;
 
-    if (
-      !emailError &&
-      !passwordError &&
-      !displayNameError &&
-      !passwordRepeatError
-    ) {
+    if (!emailError && !passwordError && !displayNameError && !passwordRepeatError) {
       const data = {
         email,
-        displayName
+        displayName,
       };
 
       this.props.doUpdate(data);
     } else {
       this.props.setMessage({
-        message: "Verifique los campos",
-        type: "error",
-        kind: "category"
+        message: 'Verifique los campos',
+        type: 'error',
+        kind: 'category',
       });
     }
   };
 
   doDelete = () => {
-    if (window.confirm("Quieres eliminar tu cuenta?")) {
+    if (window.confirm('Quieres eliminar tu cuenta?')) {
       this.props.doDelete();
     }
   };
@@ -124,7 +119,7 @@ class Profile extends Component {
     if (prevProps.userData !== this.props.userData) {
       let { avatar, email, displayName } = this.props.userData;
       if (!avatar) {
-        avatar = "";
+        avatar = '';
       }
       this.setState({ avatar, email, displayName });
     }
@@ -133,18 +128,14 @@ class Profile extends Component {
   componentDidMount() {
     let { avatar, email, displayName } = this.props.userData;
     if (!avatar) {
-      avatar = "";
+      avatar = '';
     }
     this.setState({ avatar, email, displayName });
   }
 
   render() {
     const {
-      avatar,
-      displayName,
-      displayNameError,
-      email,
-      emailError
+      avatar, displayName, displayNameError, email, emailError,
     } = this.state;
 
     return (
@@ -159,25 +150,21 @@ class Profile extends Component {
                 <span>Miembro desde:</span>
                 <span>
                   {moment(this.props.userData.signupDate)
-                    .locale("es")
+                    .locale('es')
                     .utc()
-                    .format("DD/MM/YYYY")}
+                    .format('DD/MM/YYYY')}
                 </span>
               </div>
               <div className="image-container">
                 <img
                   className="image"
-                  src={
-                    avatar !== ""
-                      ? avatar
-                      : require("./../../assets/avatar-placeholder.png")
-                  }
+                  src={avatar !== '' ? avatar : require('./../../assets/avatar-placeholder.png')}
                   alt=""
                 />
                 <Button variant="contained" component="label">
                   <input
                     accept="image/*"
-                    style={{ display: "none" }}
+                    style={{ display: 'none' }}
                     id="raised-button-file"
                     multiple
                     type="file"
@@ -195,33 +182,33 @@ class Profile extends Component {
             <div className="body">
               <TextField
                 error={emailError}
-                helperText={emailError ? "El email es inválido" : null}
+                helperText={emailError ? 'El email es inválido' : null}
                 id="email"
                 label="Email"
                 margin="normal"
                 onChange={this.handleOnEmailChange}
                 inputProps={{
-                  autoComplete: "new-password",
+                  autoComplete: 'new-password',
                   maxLength: 50,
                   form: {
-                    autoComplete: "off"
-                  }
+                    autoComplete: 'off',
+                  },
                 }}
                 value={email}
               />
               <TextField
                 error={displayNameError}
-                helperText={displayNameError ? "Ingrese un nombre" : null}
+                helperText={displayNameError ? 'Ingrese un nombre' : null}
                 id="name"
                 label="Nombre"
                 margin="normal"
                 onChange={this.handleOnDisplayNameChange}
                 inputProps={{
                   maxLength: 20,
-                  autoComplete: "new-password",
+                  autoComplete: 'new-password',
                   form: {
-                    autoComplete: "off"
-                  }
+                    autoComplete: 'off',
+                  },
                 }}
                 value={displayName}
               />
@@ -245,18 +232,16 @@ class Profile extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { isFetching: state.isFetching, userData: state.userData };
-};
+const mapStateToProps = state => ({ isFetching: state.isFetching, userData: state.userData });
 
 const mapDispatchToProps = dispatch => ({
   doUpload: data => dispatch(user.doUpload(data)),
   doUpdate: data => dispatch(user.doUpdate(data)),
   doDelete: () => dispatch(user.doDelete()),
-  setMessage: data => dispatch(comunication.setMessage(data))
+  setMessage: data => dispatch(comunication.setMessage(data)),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Profile);

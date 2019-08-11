@@ -209,9 +209,9 @@ AddMovement.propTypes = {
   handleNewMovement: PropTypes.func.isRequired,
   amountError: PropTypes.bool,
   categoryError: PropTypes.bool,
-  categories: PropTypes.arrayOf,
+  categories: PropTypes.arrayOf(PropTypes.array),
   typeOfMovement: PropTypes.string,
-  newMovement: PropTypes.objectOf,
+  newMovement: PropTypes.shape(PropTypes.shape),
 };
 
 AddMovement.defaultProps = {

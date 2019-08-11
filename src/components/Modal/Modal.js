@@ -70,8 +70,8 @@ const Modal = (props) => {
 
 Modal.propTypes = {
   typeOfMovement: PropTypes.string,
-  isOpen: PropTypes.func.isRequired,
-  isDraggable: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  isDraggable: PropTypes.bool.isRequired,
   toggleModal: PropTypes.func.isRequired,
   acceptAction: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,

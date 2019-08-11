@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -37,9 +38,17 @@ class MovementsTable extends Component {
     };
   }
 
+  // componentDidUpdate(prevProps) {
+  //   const { message } = this.props;
+  //   if (prevProps.message !== message && message.kind === 'movement_update') {
+  //     message.type === 'success' && this.toggleModal();
+  //   }
+  // }
+
   setSort = (type) => {
-    const sortBy = { type, asc: !this.state.sortBy.asc };
-    this.setState({ sortBy });
+    const { sortBy } = this.state;
+    const sort = { type, asc: !sortBy.asc };
+    this.setState({ sortBy: sort });
   };
 
   doSort = (a, b) => {
@@ -47,26 +56,31 @@ class MovementsTable extends Component {
     if (!sortBy.asc) {
       if (sortBy.type === 'date') {
         return a[sortBy.type] > b[sortBy.type] ? 1 : -1;
-      } if (sortBy.type === 'category') {
+      }
+      if (sortBy.type === 'category') {
         return a[sortBy.type].name > b[sortBy.type].name ? 1 : -1;
-      } if (sortBy.type === 'amount') {
+      }
+      if (sortBy.type === 'amount') {
         return a[sortBy.type] - b[sortBy.type];
       }
-    }
-
-    if (sortBy.asc) {
+    } else if (sortBy.asc) {
       if (sortBy.type === 'date') {
         return a[sortBy.type] > b[sortBy.type] ? -1 : 1;
-      } if (sortBy.type === 'category') {
+      }
+      if (sortBy.type === 'category') {
         return a[sortBy.type].name > b[sortBy.type].name ? -1 : 1;
-      } if (sortBy.type === 'amount') {
+      }
+      if (sortBy.type === 'amount') {
         return b[sortBy.type] - a[sortBy.type];
       }
     }
+    return 1;
   };
 
   doUpdateMovement = () => {
-    this.props.updateMovement(this.state.movementToEdit);
+    const { updateMovement } = this.props;
+    const { movementToEdit } = this.state;
+    updateMovement(movementToEdit);
   };
 
   handleChangePage = (event, page) => {
@@ -94,25 +108,23 @@ class MovementsTable extends Component {
   };
 
   handleDeleteMovement = (data) => {
-    this.props.deleteMovement(data);
+    const { deleteMovement } = this.props;
+    deleteMovement(data);
   };
 
   toggleModal = () => {
-    this.setState({ isModalOpen: !this.state.isModalOpen });
+    const { isModalOpen } = this.state;
+    this.setState({ isModalOpen: !isModalOpen });
   };
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.message !== this.props.message && this.props.message.kind === 'movement_update') {
-      this.props.message.type === 'success' && this.toggleModal();
-    }
-  }
-
   render() {
-    const movs = this.props.movements;
-    if (movs.length === 0) {
+    const { movements, total } = this.props;
+    if (movements.length === 0) {
       return null;
     }
-    const { page, rowsPerPage, sortBy } = this.state;
+    const {
+      page, rowsPerPage, sortBy, isModalOpen, movementToEdit,
+    } = this.state;
     let currentDate = null;
 
     return (
@@ -164,11 +176,11 @@ class MovementsTable extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {movs.length !== 0
-              && movs
+            {movements.length !== 0
+              && movements
                 .sort((a, b) => this.doSort(a, b))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
+                .map((row) => {
                   let separator = false;
                   const formattedDate = moment(row.date)
                     .locale('es')
@@ -187,10 +199,7 @@ class MovementsTable extends Component {
                   }
 
                   return (
-                    <TableRow
-                      key={row.date + index}
-                      className={separator ? 'date-separator' : null}
-                    >
+                    <TableRow key={row.date} className={separator ? 'date-separator' : null}>
                       <TableCell align="left" className="date-cell">
                         {formattedDate}
                       </TableCell>
@@ -231,9 +240,9 @@ class MovementsTable extends Component {
                 <span>BALANCE:</span>
               </TableCell>
               <TableCell align="left" className="foot-cell">
-                <span className={this.props.total > 0 ? 'positive' : 'negative'}>
-                  $
-                  {this.props.total}
+                <span className={total > 0 ? 'positive' : 'negative'}>
+$
+                  {total}
                 </span>
               </TableCell>
 
@@ -242,8 +251,8 @@ class MovementsTable extends Component {
                 onChangePage={this.handleChangePage}
                 colSpan={4}
                 page={page}
-                count={movs.length}
-                rowsPerPage={this.state.rowsPerPage}
+                count={movements.length}
+                rowsPerPage={rowsPerPage}
                 onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 SelectProps={{
                   native: true,
@@ -256,14 +265,14 @@ class MovementsTable extends Component {
         <Modal
           acceptAction={this.doUpdateMovement}
           isDraggable
-          isOpen={this.state.isModalOpen}
+          isOpen={isModalOpen}
           title="Editar Movimiento"
           toggleModal={this.toggleModal}
           x={-100}
           y={-220}
         >
           <EditMovement
-            movementToEdit={this.state.movementToEdit}
+            movementToEdit={movementToEdit}
             handleEditMovement={this.handleEditMovement}
           />
         </Modal>
@@ -271,6 +280,18 @@ class MovementsTable extends Component {
     );
   }
 }
+
+MovementsTable.propTypes = {
+  updateMovement: PropTypes.func.isRequired,
+  deleteMovement: PropTypes.func.isRequired,
+  movements: PropTypes.arrayOf(PropTypes.array),
+  total: PropTypes.number,
+};
+
+MovementsTable.defaultProps = {
+  movements: PropTypes.array,
+  total: PropTypes.number,
+};
 
 const mapStateToProps = state => ({ total: state.total, message: state.message });
 

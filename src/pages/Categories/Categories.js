@@ -1,21 +1,22 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { category } from "./../../store/actions/index";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
-import IconButton from "@material-ui/core/IconButton";
-import Modal from "./../../components/Modal/Modal";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableFooter from '@material-ui/core/TableFooter';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Modal from '../../components/Modal/Modal';
+import { category } from '../../store/actions/index';
 
-import "./Categories.scss";
+import './Categories.scss';
 
 class Categories extends Component {
   constructor(props) {
@@ -26,58 +27,66 @@ class Categories extends Component {
       categories: [],
       page: 0,
       rowsPerPage: 8,
-      sortBy: { type: "date", asc: true }
+      sortBy: { type: 'date', asc: true },
+      movementToEdit: {},
     };
   }
 
-  setSort = type => {
-    const sortBy = { type, asc: !this.state.sortBy.asc };
-    this.setState({ sortBy });
+  componentDidMount() {
+    const { categories } = this.props;
+    this.setState({ categories });
+  }
+
+  componentDidUpdate(prevState) {
+    const { categories } = this.props;
+
+    if (prevState.categories !== categories) {
+      this.setState({ categories });
+    }
+  }
+
+  setSort = (type) => {
+    const { sortBy } = this.state;
+    const sort = { type, asc: !sortBy.asc };
+    this.setState({ sortBy: sort });
   };
 
   doSort = (a, b) => {
     const { sortBy } = this.state;
     if (!sortBy.asc) {
       return a[sortBy.type] > b[sortBy.type] ? 1 : -1;
-    } else {
-      return a[sortBy.type] > b[sortBy.type] ? -1 : 1;
     }
+    return a[sortBy.type] > b[sortBy.type] ? -1 : 1;
   };
 
   handleChangePage = (event, page) => {
     this.setState({ page });
   };
 
-  handleChangeRowsPerPage = event => {
+  handleChangeRowsPerPage = (event) => {
     const rowsPerPage = parseInt(event.target.value, 5);
     this.setState({ rowsPerPage });
   };
 
-  handleUpdateCategory = data => {
+  handleUpdateCategory = (data) => {
     this.setState({ movementToEdit: data });
     this.toggleModal();
   };
 
-  handleDeleteCategory = data => {
-    this.props.deleteCategory(data);
+  handleDeleteCategory = (data) => {
+    const { deleteCategory } = this.props;
+    deleteCategory(data);
   };
 
   toggleModal = () => {
-    this.setState({ isModalOpen: !this.state.isModalOpen });
+    const { isModalOpen } = this.state;
+    this.setState({ isModalOpen: !isModalOpen });
   };
 
-  componentDidUpdate(prevState) {
-    if (prevState.categories !== this.props.categories) {
-      this.setState({ categories: this.props.categories });
-    }
-  }
-
-  componentDidMount() {
-    this.setState({ categories: this.props.categories });
-  }
-
   render() {
-    const { categories } = this.state;
+    const {
+      categories, isModalOpen, page, rowsPerPage, sortBy,
+    } = this.state;
     if (categories.length === 0) {
       return (
         <div className="Categories">
@@ -88,8 +97,6 @@ class Categories extends Component {
       );
     }
 
-    const { page, rowsPerPage, sortBy } = this.state;
-
     return (
       <div className="Categories">
         <div className="card">
@@ -99,13 +106,13 @@ class Categories extends Component {
                 <TableCell
                   align="left"
                   className="head-cell category-cell"
-                  onClick={() => this.setSort("category")}
+                  onClick={() => this.setSort('category')}
                 >
                   Categoría
                   <TableSortLabel
                     className="sort-label"
-                    active={sortBy.type === "category"}
-                    direction={sortBy.asc ? "asc" : "desc"}
+                    active={sortBy.type === 'category'}
+                    direction={sortBy.asc ? 'asc' : 'desc'}
                   />
                 </TableCell>
                 <TableCell align="left" className="description-cell">
@@ -116,38 +123,36 @@ class Categories extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {categories.length !== 0 &&
-                categories
+              {categories.length !== 0
+                && categories
                   .sort((a, b) => this.doSort(a, b))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    return (
-                      <TableRow key={row._id}>
-                        <TableCell align="left" className="category-cell">
-                          {row.name}
-                        </TableCell>
-                        <TableCell align="left" className="description-cell">
-                          {row.description}
-                        </TableCell>
-                        <TableCell align="right" className="option-cell">
-                          <IconButton
-                            aria-label="Edit"
-                            onClick={() => this.handleUpdateCategory(row)}
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        </TableCell>
-                        <TableCell align="right" className="option-cell">
-                          <IconButton
-                            aria-label="Delete"
-                            onClick={() => this.handleDeleteCategory(row)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+                  .map(row => (
+                    <TableRow key={row._id}>
+                      <TableCell align="left" className="category-cell">
+                        {row.name}
+                      </TableCell>
+                      <TableCell align="left" className="description-cell">
+                        {row.description}
+                      </TableCell>
+                      <TableCell align="right" className="option-cell">
+                        <IconButton
+                          aria-label="Edit"
+                          onClick={() => this.handleUpdateCategory(row)}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="right" className="option-cell">
+                        <IconButton
+                          aria-label="Delete"
+                          onClick={() => this.handleDeleteCategory(row)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
             </TableBody>
             <TableFooter>
               <TableRow>
@@ -156,14 +161,12 @@ class Categories extends Component {
                   onChangePage={this.handleChangePage}
                   page={page}
                   count={categories.length}
-                  rowsPerPage={this.state.rowsPerPage}
+                  rowsPerPage={rowsPerPage}
                   onChangeRowsPerPage={this.handleChangeRowsPerPage}
                   SelectProps={{
-                    native: true
+                    native: true,
                   }}
-                  labelDisplayedRows={({ from, to, count }) =>
-                    `${from}-${to} de ${count}`
-                  }
+                  labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
                 />
               </TableRow>
             </TableFooter>
@@ -171,7 +174,7 @@ class Categories extends Component {
           <Modal
             acceptAction={this.doUpdateCategory}
             isDraggable
-            isOpen={this.state.isModalOpen}
+            isOpen={isModalOpen}
             title="Editar Movimiento"
             toggleModal={this.toggleModal}
             x={-100}
@@ -182,16 +185,24 @@ class Categories extends Component {
     );
   }
 }
-const mapStateToProps = state => {
-  return { categories: state.categories, message: state.message };
+
+Categories.propTypes = {
+  categories: PropTypes.arrayOf(PropTypes.array),
+  deleteCategory: PropTypes.func(PropTypes.func).isRequired,
 };
+
+Categories.defaultProps = {
+  categories: PropTypes.array,
+};
+
+const mapStateToProps = state => ({ categories: state.categories, message: state.message });
 
 const mapDispatchToProps = dispatch => ({
   updateCategory: data => dispatch(category.updateCategory(data)),
-  deleteCategory: data => dispatch(category.deleteCategory(data))
+  deleteCategory: data => dispatch(category.deleteCategory(data)),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Categories);

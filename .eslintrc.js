@@ -28,5 +28,6 @@ module.exports = {
     'jsx-a11y/no-noninteractive-element-interactions': 0,
     'react/no-string-refs': 0,
     'react/forbid-prop-types': 0,
+    'no-alert': 0,
   },
 };

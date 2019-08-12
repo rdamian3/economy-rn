@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-
+import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { user, comunication } from '../../store/actions/index';
-
 import './Profile.scss';
+
+const defaultAvatar = require('./../../assets/avatar-placeholder.png');
 
 class Profile extends Component {
   constructor(props) {
@@ -23,9 +24,30 @@ class Profile extends Component {
       displayNameError: false,
       password: '',
       passwordError: false,
-      passwordRepeat: '',
       passwordRepeatError: false,
     };
+  }
+
+  componentDidMount() {
+    const { userData } = this.props;
+    const { email, displayName } = userData;
+    let { avatar } = userData;
+    if (!avatar) {
+      avatar = '';
+    }
+    this.setState({ avatar, email, displayName });
+  }
+
+  componentDidUpdate(prevProps) {
+    const { userData } = this.props;
+    if (prevProps.userData !== userData) {
+      const { email, displayName } = userData;
+      let { avatar } = userData;
+      if (!avatar) {
+        avatar = '';
+      }
+      this.setState({ avatar, email, displayName });
+    }
   }
 
   handleEnterKeyPress = (event) => {
@@ -54,36 +76,39 @@ class Profile extends Component {
   };
 
   handleOnPasswordRepeatChange = (event) => {
+    const { password } = this.state;
     const passwordRepeat = event.target.value;
-    const passwordRepeatError = passwordRepeat !== this.state.password;
-    this.setState({ passwordRepeat, passwordRepeatError });
+    const passwordRepeatError = passwordRepeat !== password;
+    this.setState({ passwordRepeatError });
   };
 
   doUpload = (evt) => {
     const img = evt.target.files[0];
+    const { setMessage, doUpload } = this.props;
 
     if (!img) {
       return;
     }
     if (img.type !== 'image/jpeg' && img.type !== 'image/png') {
-      return this.props.setMessage({
+      setMessage({
         message: 'Sólo se admiten imágenes',
         type: 'error',
         kind: '',
       });
     }
     if (img.size > 1000000) {
-      return this.props.setMessage({
+      setMessage({
         message: 'El tamaño máximo es de 1MB',
         type: 'error',
         kind: '',
       });
     }
 
-    this.props.doUpload(img);
+    doUpload(img);
   };
 
   doUpdate = () => {
+    const { setMessage, doUpdate } = this.props;
     const {
       emailError,
       passwordError,
@@ -99,9 +124,9 @@ class Profile extends Component {
         displayName,
       };
 
-      this.props.doUpdate(data);
+      doUpdate(data);
     } else {
-      this.props.setMessage({
+      setMessage({
         message: 'Verifique los campos',
         type: 'error',
         kind: 'category',
@@ -111,32 +136,16 @@ class Profile extends Component {
 
   doDelete = () => {
     if (window.confirm('Quieres eliminar tu cuenta?')) {
-      this.props.doDelete();
+      const { doDelete } = this.props;
+      doDelete();
     }
   };
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.userData !== this.props.userData) {
-      let { avatar, email, displayName } = this.props.userData;
-      if (!avatar) {
-        avatar = '';
-      }
-      this.setState({ avatar, email, displayName });
-    }
-  }
-
-  componentDidMount() {
-    let { avatar, email, displayName } = this.props.userData;
-    if (!avatar) {
-      avatar = '';
-    }
-    this.setState({ avatar, email, displayName });
-  }
 
   render() {
     const {
       avatar, displayName, displayNameError, email, emailError,
     } = this.state;
+    const { userData, isFetching } = this.props;
 
     return (
       <div className="Profile">
@@ -149,18 +158,14 @@ class Profile extends Component {
               <div className="member-since">
                 <span>Miembro desde:</span>
                 <span>
-                  {moment(this.props.userData.signupDate)
+                  {moment(userData.signupDate)
                     .locale('es')
                     .utc()
                     .format('DD/MM/YYYY')}
                 </span>
               </div>
               <div className="image-container">
-                <img
-                  className="image"
-                  src={avatar !== '' ? avatar : require('./../../assets/avatar-placeholder.png')}
-                  alt=""
-                />
+                <img className="image" src={avatar !== '' ? avatar : defaultAvatar} alt="" />
                 <Button variant="contained" component="label">
                   <input
                     accept="image/*"
@@ -171,7 +176,7 @@ class Profile extends Component {
                     name="avatar"
                     onChange={this.doUpload}
                   />
-                  {this.props.isFetching ? (
+                  {isFetching ? (
                     <CircularProgress className="progress" size={24} />
                   ) : (
                     <span>Cambiar foto</span>
@@ -219,7 +224,7 @@ class Profile extends Component {
               <span>Eliminar mi cuenta</span>
             </Link>
             <Button color="primary" onClick={this.doUpdate} variant="contained">
-              {this.props.isFetching ? (
+              {isFetching ? (
                 <CircularProgress className="progress" size={24} />
               ) : (
                 <span>Actualizar</span>
@@ -231,6 +236,33 @@ class Profile extends Component {
     );
   }
 }
+
+Profile.propTypes = {
+  userData: PropTypes.shape({
+    signupDate: PropTypes.string,
+    _id: PropTypes.string,
+    email: PropTypes.string,
+    displayName: PropTypes.string,
+    avatar: PropTypes.string,
+    bucket: PropTypes.string,
+  }),
+  setMessage: PropTypes.func.isRequired,
+  doUpdate: PropTypes.func.isRequired,
+  doDelete: PropTypes.func.isRequired,
+  doUpload: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool.isRequired,
+};
+
+Profile.defaultProps = {
+  userData: {
+    signupDate: '',
+    _id: '',
+    email: '',
+    displayName: '',
+    avatar: '',
+    bucket: '',
+  },
+};
 
 const mapStateToProps = state => ({ isFetching: state.isFetching, userData: state.userData });
 

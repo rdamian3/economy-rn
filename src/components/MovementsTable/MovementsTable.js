@@ -38,12 +38,16 @@ class MovementsTable extends Component {
     };
   }
 
-  // componentDidUpdate(prevProps) {
-  //   const { message } = this.props;
-  //   if (prevProps.message !== message && message.kind === 'movement_update') {
-  //     message.type === 'success' && this.toggleModal();
-  //   }
-  // }
+  componentDidUpdate(prevProps) {
+    const { message } = this.props;
+    if (
+      prevProps.message !== message
+      && message.kind === 'movement_update'
+      && message.type === 'success'
+    ) {
+      this.toggleModal();
+    }
+  }
 
   setSort = (type) => {
     const { sortBy } = this.state;
@@ -286,11 +290,13 @@ MovementsTable.propTypes = {
   deleteMovement: PropTypes.func.isRequired,
   movements: PropTypes.arrayOf(PropTypes.array),
   total: PropTypes.number,
+  message: PropTypes.string,
 };
 
 MovementsTable.defaultProps = {
   movements: PropTypes.array,
   total: PropTypes.number,
+  message: PropTypes.string,
 };
 
 const mapStateToProps = state => ({ total: state.total, message: state.message });

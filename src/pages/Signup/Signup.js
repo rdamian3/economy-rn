@@ -192,11 +192,15 @@ class Signup extends Component {
 
 Signup.propTypes = {
   setMessage: PropTypes.func.isRequired,
-  message: PropTypes.string,
+  message: PropTypes.object,
+  isFetching: PropTypes.bool.isRequired,
+  history: PropTypes.object,
+  doSignup: PropTypes.func.isRequired,
 };
 
 Signup.defaultProps = {
-  message: PropTypes.string,
+  message: {},
+  history: null,
 };
 
 const mapStateToProps = state => ({ isFetching: state.isFetching, message: state.message });

@@ -188,7 +188,7 @@ class Categories extends Component {
 
 Categories.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.array),
-  deleteCategory: PropTypes.func(PropTypes.func).isRequired,
+  deleteCategory: PropTypes.func.isRequired,
 };
 
 Categories.defaultProps = {

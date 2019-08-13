@@ -288,15 +288,15 @@ $
 MovementsTable.propTypes = {
   updateMovement: PropTypes.func.isRequired,
   deleteMovement: PropTypes.func.isRequired,
-  movements: PropTypes.arrayOf(PropTypes.array),
+  movements: PropTypes.array,
   total: PropTypes.number,
-  message: PropTypes.string,
+  message: PropTypes.object,
 };
 
 MovementsTable.defaultProps = {
-  movements: PropTypes.array,
+  movements: [],
   total: PropTypes.number,
-  message: PropTypes.string,
+  message: {},
 };
 
 const mapStateToProps = state => ({ total: state.total, message: state.message });

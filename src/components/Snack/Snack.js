@@ -39,9 +39,13 @@ const Snack = (props) => {
 };
 
 Snack.propTypes = {
-  messageMessage: PropTypes.string.isRequired,
+  messageMessage: PropTypes.string,
   clearMessages: PropTypes.func.isRequired,
   messageType: PropTypes.string.isRequired,
+};
+
+Snack.defaultProps = {
+  messageMessage: PropTypes.string,
 };
 
 const mapStateToProps = state => ({

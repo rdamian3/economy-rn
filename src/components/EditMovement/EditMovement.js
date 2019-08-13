@@ -114,8 +114,8 @@ class EditMovement extends Component {
 
 EditMovement.propTypes = {
   handleEditMovement: PropTypes.func.isRequired,
-  movementToEdit: PropTypes.func.isRequired,
-  categories: PropTypes.arrayOf,
+  movementToEdit: PropTypes.object.isRequired,
+  categories: PropTypes.array,
 };
 
 EditMovement.defaultProps = {

@@ -209,7 +209,7 @@ AddMovement.propTypes = {
   handleNewMovement: PropTypes.func.isRequired,
   amountError: PropTypes.bool,
   categoryError: PropTypes.bool,
-  categories: PropTypes.arrayOf(PropTypes.array),
+  categories: PropTypes.array,
   typeOfMovement: PropTypes.string,
   newMovement: PropTypes.shape(PropTypes.shape),
 };

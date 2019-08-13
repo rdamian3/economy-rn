@@ -44,10 +44,15 @@ export function sessionHandler(userData, userToken, cb) {
           cb();
         })
         .catch((e) => {
-          if (e.response.status === 401) {
-            localStorage.removeItem('userToken');
-            localStorage.removeItem('userData');
-            dispatch(removeUserData());
+          if (!e.response) {
+            dispatch(
+              comunication.setMessage({
+                message: 'Error de conexión...',
+                type: 'error',
+                kind: 'user',
+              }),
+            );
+          } else if (e.response.status === 401) {
             dispatch(
               comunication.setMessage({
                 message: 'Su sesión ha expirado...',
@@ -55,8 +60,11 @@ export function sessionHandler(userData, userToken, cb) {
                 kind: 'user',
               }),
             );
-            dispatch(comunication.stopFetching());
           }
+          dispatch(comunication.stopFetching());
+          localStorage.removeItem('userToken');
+          localStorage.removeItem('userData');
+          dispatch(removeUserData());
         });
     } else if (cb) {
       cb();

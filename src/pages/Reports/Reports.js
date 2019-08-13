@@ -186,8 +186,8 @@ class Reports extends Component {
 }
 
 Reports.propTypes = {
-  movements: PropTypes.arrayOf(PropTypes.array),
-  categories: PropTypes.arrayOf(PropTypes.array),
+  movements: PropTypes.array,
+  categories: PropTypes.array,
   setMessage: PropTypes.func.isRequired,
 };
 

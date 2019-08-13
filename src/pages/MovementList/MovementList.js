@@ -186,14 +186,14 @@ class MovementList extends Component {
 }
 
 MovementList.propTypes = {
-  movements: PropTypes.arrayOf(PropTypes.array),
+  movements: PropTypes.array,
   addMovement: PropTypes.func.isRequired,
   setMessage: PropTypes.func.isRequired,
   getMovements: PropTypes.func.isRequired,
 };
 
 MovementList.defaultProps = {
-  movements: PropTypes.array,
+  movements: [],
 };
 
 const mapStateToProps = state => ({ movements: state.movements });

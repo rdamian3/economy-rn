@@ -82,9 +82,9 @@ Modal.propTypes = {
 };
 
 Modal.defaultProps = {
-  typeOfMovement: 'income',
-  x: 0,
-  y: 0,
+  typeOfMovement: '',
+  x: -100,
+  y: -220,
   title: '',
 };
 

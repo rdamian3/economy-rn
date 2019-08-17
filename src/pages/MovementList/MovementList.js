@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
-import { movement, comunication } from '../../store/actions/index';
-import Modal from '../../components/Modal/Modal';
+import PropTypes from 'prop-types';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
+import Modal from '../../components/Modal/Modal';
+import { movement, comunication, category } from '../../store/actions/index';
 import AddMovement from '../../components/AddMovement/AddMovement';
 import MovementsTable from '../../components/MovementsTable/MovementsTable';
 
@@ -23,56 +23,54 @@ class MovementList extends Component {
         amount: 0,
         category: { name: '', _id: '' },
         date: new Date(),
-        description: ''
+        description: '',
       },
-      typeOfMovement: 'income'
+      typeOfMovement: 'income',
     };
 
     this.getMovementsOnStartUp();
   }
 
-  handleNewMovement = event => {
-    const name = event.target.name;
-    const value = event.target.value;
-    const { amountError, categoryError } = this.state;
-
-    if (name === 'amount') {
-      this.setState({ amountError: value === '' });
+  componentDidUpdate(prevProps) {
+    const { movements } = this.props;
+    if (prevProps.movements !== movements) {
+      const movs = movements.map(el => ({
+        _id: el._id,
+        amount: el.amount,
+        category: { name: el.category.name, _id: el.category._id },
+        date: el.date,
+        description: el.description,
+      }));
+      this.setState({ movs });
     }
-
-    if (name === 'category') {
-      this.setState({ categoryError: value === '' });
-    }
-
-    if (!amountError && !categoryError) {
-      this.setState(prevState => {
-        let newMovement = Object.assign({}, prevState.newMovement);
-        newMovement[name] = value;
-        return { newMovement };
-      });
-    }
-  };
+  }
 
   addNewMovement = () => {
-    let { newMovement, typeOfMovement } = this.state;
-    if (newMovement.amount !== '' && newMovement.category.name !== '') {
+    const { newMovement, typeOfMovement } = this.state;
+    const { addMovement, setMessage } = this.props;
+
+    this.setState({ categoryError: newMovement.category.name === '' });
+    this.setState({
+      amountError: newMovement.amount === 0 || newMovement.amount === '0',
+    });
+    if (
+      newMovement.amount !== 0
+      && newMovement.amount !== '0'
+      && newMovement.category.name !== ''
+    ) {
       if (typeOfMovement !== 'income') {
         newMovement.amount = -Math.abs(newMovement.amount);
       }
-      this.props.addMovement(newMovement);
-      this.toggleModal();
+      addMovement(newMovement);
       this.clearNewMovementState();
+      this.toggleModal();
     } else {
-      this.props.setMessage({
+      setMessage({
         message: 'Verifique los campos',
         type: 'error',
-        kind: 'category'
+        kind: 'category',
       });
     }
-  };
-
-  getMovementsOnStartUp = () => {
-    this.props.getMovements();
   };
 
   clearNewMovementState = () => {
@@ -80,34 +78,55 @@ class MovementList extends Component {
       amount: 0,
       category: { name: '', _id: '' },
       date: new Date(),
-      description: ''
+      description: '',
     };
     this.setState({ newMovement });
   };
 
-  toggleModal = () => {
-    this.setState({ isModalOpen: !this.state.isModalOpen });
+  dynamicStateChanger = (name, value) => {
+    this.setState((prevState) => {
+      const newMovement = Object.assign({}, prevState.newMovement);
+      newMovement[name] = value;
+      return { newMovement };
+    });
   };
 
-  toggleTypeOfMovement = typeOfMovement => {
+  getMovementsOnStartUp = () => {
+    const { getMovements, getCategories } = this.props;
+    getMovements();
+    getCategories();
+  };
+
+  handleNewMovement = (event) => {
+    const { name, value } = event.target;
+    const { amountError, categoryError } = this.state;
+
+    if (name === 'amount') {
+      this.setState({ amountError: value === 0 || value === '0' });
+      if (!amountError) {
+        return this.dynamicStateChanger(name, value);
+      }
+    }
+
+    if (name === 'category') {
+      this.setState({ categoryError: value._id === '' });
+      if (!categoryError) {
+        return this.dynamicStateChanger(name, value);
+      }
+    }
+
+    return this.dynamicStateChanger(name, value);
+  };
+
+  toggleModal = () => {
+    const { isModalOpen } = this.state;
+    this.setState({ isModalOpen: !isModalOpen });
+  };
+
+  toggleTypeOfMovement = (typeOfMovement) => {
     this.setState({ typeOfMovement });
     this.toggleModal();
   };
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.movements !== this.props.movements) {
-      const movs = this.props.movements.map(el => {
-        return {
-          _id: el._id,
-          amount: el.amount,
-          category: { name: el.category.name, _id: el.category._id },
-          date: el.date,
-          description: el.description
-        };
-      });
-      this.setState({ movs });
-    }
-  }
 
   render() {
     const {
@@ -116,7 +135,7 @@ class MovementList extends Component {
       typeOfMovement,
       amountError,
       categoryError,
-      newMovement
+      newMovement,
     } = this.state;
     return (
       <div className="MovementList">
@@ -167,17 +186,28 @@ class MovementList extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { movements: state.movements };
+MovementList.propTypes = {
+  movements: PropTypes.array,
+  addMovement: PropTypes.func.isRequired,
+  setMessage: PropTypes.func.isRequired,
+  getMovements: PropTypes.func.isRequired,
+  getCategories: PropTypes.func.isRequired,
 };
+
+MovementList.defaultProps = {
+  movements: [],
+};
+
+const mapStateToProps = state => ({ movements: state.movements });
 
 const mapDispatchToProps = dispatch => ({
   addMovement: data => dispatch(movement.addMovement(data)),
   getMovements: () => dispatch(movement.getMovements()),
-  setMessage: data => dispatch(comunication.setMessage(data))
+  getCategories: () => dispatch(category.getCategories()),
+  setMessage: data => dispatch(comunication.setMessage(data)),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(MovementList);

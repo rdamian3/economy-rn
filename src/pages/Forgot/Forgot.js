@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { user } from '../../store/actions/index';
+import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { user } from '../../store/actions/index';
 
 import './Forgot.scss';
 
@@ -14,11 +15,18 @@ class Forgot extends Component {
     super(props);
     this.state = {
       email: '',
-      emailError: false
+      emailError: false,
     };
   }
 
-  handleOnEmailChange = event => {
+  componentWillUpdate(prevProps) {
+    const { message, history } = this.props;
+    if (prevProps.message !== message && message.kind === 'user' && message.type === 'success') {
+      history.push('/signin');
+    }
+  }
+
+  handleOnEmailChange = (event) => {
     const email = event.target.value;
     const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     const emailError = re.test(String(email).toLowerCase());
@@ -28,29 +36,21 @@ class Forgot extends Component {
   doForgot = () => {
     const { email, emailError } = this.state;
     if (!emailError && email !== '') {
-      alert('entra');
+      this.setState({ emailError: false });
     } else {
       this.setState({ emailError: true });
     }
   };
 
-  componentWillUpdate(prevProps) {
-    if (
-      prevProps.message !== this.props.message &&
-      this.props.message.kind === 'user'
-    ) {
-      this.props.message.type === 'success' &&
-        this.props.history.push('/signin');
-    }
-  }
-
-  handleEnterKeyPress = event => {
+  handleEnterKeyPress = (event) => {
     if (event.key === 'Enter') {
       this.doForgot();
     }
   };
 
   render() {
+    const { emailError } = this.state;
+    const { isFetching } = this.props;
     return (
       <div className="Forgot">
         <div className="card">
@@ -59,18 +59,16 @@ class Forgot extends Component {
               Recuperar mi contraseña
             </Typography>
             <TextField
-              error={this.state.emailError}
+              error={emailError}
               id="email"
               label="Email"
               margin="normal"
               onChange={this.handleOnEmailChange}
               onKeyPress={this.handleEnterKeyPress}
-              helperText={
-                this.state.emailError ? 'Ingrese un email válido' : null
-              }
+              helperText={emailError ? 'Ingrese un email válido' : null}
             />
             <Button color="primary" onClick={this.doForgot} variant="contained">
-              {this.props.isFetching ? (
+              {isFetching ? (
                 <CircularProgress className="progress" size={24} />
               ) : (
                 <span>Recuperar</span>
@@ -79,7 +77,7 @@ class Forgot extends Component {
           </div>
           <div className="footer">
             <span>Tienes un cuenta?</span>
-            <Link to={'/signin'}>Ingresa!</Link>
+            <Link to="/signin">Ingresa!</Link>
           </div>
         </div>
       </div>
@@ -87,15 +85,23 @@ class Forgot extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { isFetching: state.isFetching };
+Forgot.propTypes = {
+  message: PropTypes.string.isRequired,
+  history: PropTypes.object,
+  isFetching: PropTypes.bool.isRequired,
 };
 
+Forgot.defaultProps = {
+  history: null,
+};
+
+const mapStateToProps = state => ({ isFetching: state.isFetching });
+
 const mapDispatchToProps = dispatch => ({
-  doForgot: data => dispatch(user.doForgot(data))
+  doForgot: data => dispatch(user.doForgot(data)),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Forgot);

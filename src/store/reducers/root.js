@@ -11,7 +11,7 @@ import {
   SET_TOTAL,
   SET_FILTERED_MOVEMENTS,
   CLEAR_FILTERED_MOVEMENTS
-} from './../actions/types';
+} from "./../actions/types";
 
 let initialState = {
   categories: [],
@@ -19,7 +19,7 @@ let initialState = {
   movements: [],
   userData: null,
   userToken: null,
-  message: { message: '', type: '', kind: '' },
+  message: { message: "", type: "", kind: "" },
   total: 0,
   filteredMovements: {}
 };
@@ -29,6 +29,7 @@ const rootReducer = (state = initialState, action) => {
     case REMOVE_USER_DATA:
       return {
         ...state,
+        userData: null,
         userToken: null
       };
     case SET_MESSAGE:
@@ -44,9 +45,9 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         message: {
-          message: '',
-          type: '',
-          kind: ''
+          message: "",
+          type: "",
+          kind: ""
         }
       };
     case SET_USER_DATA:

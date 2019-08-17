@@ -1,99 +1,151 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { user, comunication } from './../../store/actions/index';
-
-import TextField from '@material-ui/core/TextField';
+import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Link from '@material-ui/core/Link';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import { user, comunication } from '../../store/actions/index';
 import './Profile.scss';
+
+const defaultAvatar = require('./../../assets/avatar-placeholder.png');
 
 class Profile extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      avatar: '',
       email: '',
       emailError: false,
       displayName: '',
       displayNameError: false,
       password: '',
       passwordError: false,
-      passwordRepeat: '',
-      passwordRepeatError: false
+      passwordRepeatError: false,
     };
   }
 
-  handleEnterKeyPress = event => {
+  componentDidMount() {
+    const { userData } = this.props;
+    const { email, displayName } = userData;
+    let { avatar } = userData;
+    if (!avatar) {
+      avatar = '';
+    }
+    this.setState({ avatar, email, displayName });
+  }
+
+  componentDidUpdate(prevProps) {
+    const { userData } = this.props;
+    if (prevProps.userData !== userData) {
+      const { email, displayName } = userData;
+      let { avatar } = userData;
+      if (!avatar) {
+        avatar = '';
+      }
+      this.setState({ avatar, email, displayName });
+    }
+  }
+
+  handleEnterKeyPress = (event) => {
     if (event.key === 'Enter') {
       this.doUpdate();
     }
   };
 
-  handleOnEmailChange = event => {
+  handleOnEmailChange = (event) => {
     const email = event.target.value;
     const regEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     const emailError = regEx.test(String(email).toLowerCase());
     this.setState({ email, emailError: !emailError });
   };
 
-  handleOnDisplayNameChange = event => {
+  handleOnDisplayNameChange = (event) => {
     const displayName = event.target.value;
     const displayNameError = displayName.length < 2;
     this.setState({ displayName, displayNameError });
   };
 
-  handleOnPasswordChange = event => {
+  handleOnPasswordChange = (event) => {
     const password = event.target.value;
     const passwordError = password.length < 8;
     this.setState({ password, passwordError });
   };
 
-  handleOnPasswordRepeatChange = event => {
+  handleOnPasswordRepeatChange = (event) => {
+    const { password } = this.state;
     const passwordRepeat = event.target.value;
-    const passwordRepeatError = passwordRepeat !== this.state.password;
-    this.setState({ passwordRepeat, passwordRepeatError });
+    const passwordRepeatError = passwordRepeat !== password;
+    this.setState({ passwordRepeatError });
+  };
+
+  doUpload = (evt) => {
+    const img = evt.target.files[0];
+    const { setMessage, doUpload } = this.props;
+
+    if (!img) {
+      return;
+    }
+    if (img.type !== 'image/jpeg' && img.type !== 'image/png') {
+      setMessage({
+        message: 'Sólo se admiten imágenes',
+        type: 'error',
+        kind: '',
+      });
+    }
+    if (img.size > 1000000) {
+      setMessage({
+        message: 'El tamaño máximo es de 1MB',
+        type: 'error',
+        kind: '',
+      });
+    }
+
+    doUpload(img);
   };
 
   doUpdate = () => {
+    const { setMessage, doUpdate } = this.props;
     const {
       emailError,
       passwordError,
       displayNameError,
       passwordRepeatError,
       email,
-      displayName
+      displayName,
     } = this.state;
 
-    if (
-      !emailError &&
-      !passwordError &&
-      !displayNameError &&
-      !passwordRepeatError
-    ) {
+    if (!emailError && !passwordError && !displayNameError && !passwordRepeatError) {
       const data = {
         email,
-        displayName
+        displayName,
       };
 
-      this.props.doUpdate(data);
+      doUpdate(data);
     } else {
-      this.props.setMessage({
+      setMessage({
         message: 'Verifique los campos',
         type: 'error',
-        kind: 'category'
+        kind: 'category',
       });
     }
   };
 
-  componentDidMount() {
-    const { email, displayName } = this.props.userData;
-    this.setState({ email, displayName });
-  }
+  doDelete = () => {
+    if (window.confirm('Quieres eliminar tu cuenta?')) {
+      const { doDelete } = this.props;
+      doDelete();
+    }
+  };
 
   render() {
-    const { displayName, displayNameError, email, emailError } = this.state;
+    const {
+      avatar, displayName, displayNameError, email, emailError,
+    } = this.state;
+    const { userData, isFetching } = this.props;
 
     return (
       <div className="Profile">
@@ -106,24 +158,25 @@ class Profile extends Component {
               <div className="member-since">
                 <span>Miembro desde:</span>
                 <span>
-                  {moment(this.props.userData.signupDate)
+                  {moment(userData.signupDate)
                     .locale('es')
                     .utc()
                     .format('DD/MM/YYYY')}
                 </span>
               </div>
               <div className="image-container">
-                <img
-                  className="image"
-                  src={require('./../../assets/avatar-placeholder.png')}
-                  alt=""
-                />
-                <Button
-                  size="small"
-                  onClick={this.doUpdate}
-                  variant="contained"
-                >
-                  {this.props.isFetching ? (
+                <img className="image" src={avatar !== '' ? avatar : defaultAvatar} alt="" />
+                <Button variant="contained" component="label">
+                  <input
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    id="raised-button-file"
+                    multiple
+                    type="file"
+                    name="avatar"
+                    onChange={this.doUpload}
+                  />
+                  {isFetching ? (
                     <CircularProgress className="progress" size={24} />
                   ) : (
                     <span>Cambiar foto</span>
@@ -143,8 +196,8 @@ class Profile extends Component {
                   autoComplete: 'new-password',
                   maxLength: 50,
                   form: {
-                    autoComplete: 'off'
-                  }
+                    autoComplete: 'off',
+                  },
                 }}
                 value={email}
               />
@@ -159,16 +212,19 @@ class Profile extends Component {
                   maxLength: 20,
                   autoComplete: 'new-password',
                   form: {
-                    autoComplete: 'off'
-                  }
+                    autoComplete: 'off',
+                  },
                 }}
                 value={displayName}
               />
             </div>
           </div>
           <div className="footer">
+            <Link color="error" onClick={this.doDelete} className="delete">
+              <span>Eliminar mi cuenta</span>
+            </Link>
             <Button color="primary" onClick={this.doUpdate} variant="contained">
-              {this.props.isFetching ? (
+              {isFetching ? (
                 <CircularProgress className="progress" size={24} />
               ) : (
                 <span>Actualizar</span>
@@ -181,16 +237,43 @@ class Profile extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { isFetching: state.isFetching, userData: state.userData };
+Profile.propTypes = {
+  userData: PropTypes.shape({
+    signupDate: PropTypes.string,
+    _id: PropTypes.string,
+    email: PropTypes.string,
+    displayName: PropTypes.string,
+    avatar: PropTypes.string,
+    bucket: PropTypes.string,
+  }),
+  setMessage: PropTypes.func.isRequired,
+  doUpdate: PropTypes.func.isRequired,
+  doDelete: PropTypes.func.isRequired,
+  doUpload: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool.isRequired,
 };
 
+Profile.defaultProps = {
+  userData: {
+    signupDate: '',
+    _id: '',
+    email: '',
+    displayName: '',
+    avatar: '',
+    bucket: '',
+  },
+};
+
+const mapStateToProps = state => ({ isFetching: state.isFetching, userData: state.userData });
+
 const mapDispatchToProps = dispatch => ({
+  doUpload: data => dispatch(user.doUpload(data)),
   doUpdate: data => dispatch(user.doUpdate(data)),
-  setMessage: data => dispatch(comunication.setMessage(data))
+  doDelete: () => dispatch(user.doDelete()),
+  setMessage: data => dispatch(comunication.setMessage(data)),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Profile);

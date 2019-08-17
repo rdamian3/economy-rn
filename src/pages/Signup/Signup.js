@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { user, comunication } from './../../store/actions/index';
 import { Link } from 'react-router-dom';
-
+import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { user, comunication } from '../../store/actions/index';
 
 import './Signup.scss';
 
@@ -20,40 +20,47 @@ class Signup extends Component {
       displayNameError: false,
       password: '',
       passwordError: false,
-      passwordRepeat: '',
-      passwordRepeatError: false
+      passwordRepeatError: false,
     };
   }
 
-  handleEnterKeyPress = event => {
+  componentDidUpdate(prevProps) {
+    const { message, history } = this.props;
+    if (prevProps.message !== message && message.kind === 'user' && message.type === 'success') {
+      history.push('/home');
+    }
+  }
+
+  handleEnterKeyPress = (event) => {
     if (event.key === 'Enter') {
       this.doSignup();
     }
   };
 
-  handleOnEmailChange = event => {
+  handleOnEmailChange = (event) => {
     const email = event.target.value;
     const regEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     const emailError = regEx.test(String(email).toLowerCase());
     this.setState({ email, emailError: !emailError });
   };
 
-  handleOnDisplayNameChange = event => {
+  handleOnDisplayNameChange = (event) => {
     const displayName = event.target.value;
     const displayNameError = displayName.length < 2;
     this.setState({ displayName, displayNameError });
   };
 
-  handleOnPasswordChange = event => {
+  handleOnPasswordChange = (event) => {
     const password = event.target.value;
     const passwordError = password.length < 8;
     this.setState({ password, passwordError });
   };
 
-  handleOnPasswordRepeatChange = event => {
+  handleOnPasswordRepeatChange = (event) => {
+    const { password } = this.state;
     const passwordRepeat = event.target.value;
-    const passwordRepeatError = passwordRepeat !== this.state.password;
-    this.setState({ passwordRepeat, passwordRepeatError });
+    const passwordRepeatError = passwordRepeat !== password;
+    this.setState({ passwordRepeatError });
   };
 
   doSignup = () => {
@@ -64,46 +71,32 @@ class Signup extends Component {
       displayName,
       passwordError,
       displayNameError,
-      passwordRepeatError
+      passwordRepeatError,
     } = this.state;
 
-    if (
-      !emailError &&
-      !passwordError &&
-      !displayNameError &&
-      !passwordRepeatError
-    ) {
+    const { doSignup, setMessage } = this.props;
+
+    if (!emailError && !passwordError && !displayNameError && !passwordRepeatError) {
       const data = {
         email,
         password,
-        displayName
+        displayName,
       };
-      this.props.doSignup(data);
+      doSignup(data);
     } else {
-      this.props.setMessage({
+      setMessage({
         message: 'Verifique los campos',
         type: 'error',
-        kind: 'category'
+        kind: 'category',
       });
     }
   };
 
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.message !== this.props.message &&
-      this.props.message.kind === 'user-signup'
-    ) {
-      this.props.history.push('/home');
-    }
-  }
-
   render() {
     const {
-      emailError,
-      displayNameError,
-      passwordError,
-      passwordRepeatError
+      emailError, displayNameError, passwordError, passwordRepeatError,
     } = this.state;
+    const { isFetching } = this.props;
 
     return (
       <div className="signup">
@@ -124,8 +117,8 @@ class Signup extends Component {
                 autoComplete: 'new-password',
                 maxLength: 50,
                 form: {
-                  autoComplete: 'off'
-                }
+                  autoComplete: 'off',
+                },
               }}
             />
             <TextField
@@ -140,8 +133,8 @@ class Signup extends Component {
                 autoComplete: 'new-password',
                 maxLength: 20,
                 form: {
-                  autoComplete: 'off'
-                }
+                  autoComplete: 'off',
+                },
               }}
             />
             <TextField
@@ -157,15 +150,13 @@ class Signup extends Component {
                 autoComplete: 'new-password',
                 maxLength: 50,
                 form: {
-                  autoComplete: 'off'
-                }
+                  autoComplete: 'off',
+                },
               }}
             />
             <TextField
               error={passwordRepeatError}
-              helperText={
-                passwordRepeatError ? 'Las contraseñas no coinciden' : null
-              }
+              helperText={passwordRepeatError ? 'Las contraseñas no coinciden' : null}
               id="password-repeat"
               label="Repita su contraseña"
               margin="normal"
@@ -177,12 +168,12 @@ class Signup extends Component {
                 autoComplete: 'new-password',
                 maxLength: 50,
                 form: {
-                  autoComplete: 'off'
-                }
+                  autoComplete: 'off',
+                },
               }}
             />
             <Button color="primary" onClick={this.doSignup} variant="contained">
-              {this.props.isFetching ? (
+              {isFetching ? (
                 <CircularProgress className="progress" size={24} />
               ) : (
                 <span>Registrarme</span>
@@ -191,7 +182,7 @@ class Signup extends Component {
           </div>
           <div className="footer">
             <span>Ya tengo una cuenta,</span>
-            <Link to={'/signin'}>ingresar</Link>
+            <Link to="/signin">ingresar</Link>
           </div>
         </div>
       </div>
@@ -199,16 +190,27 @@ class Signup extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { isFetching: state.isFetching, message: state.message };
+Signup.propTypes = {
+  setMessage: PropTypes.func.isRequired,
+  message: PropTypes.object,
+  isFetching: PropTypes.bool.isRequired,
+  history: PropTypes.object,
+  doSignup: PropTypes.func.isRequired,
 };
+
+Signup.defaultProps = {
+  message: {},
+  history: null,
+};
+
+const mapStateToProps = state => ({ isFetching: state.isFetching, message: state.message });
 
 const mapDispatchToProps = dispatch => ({
   doSignup: data => dispatch(user.doSignup(data)),
-  setMessage: data => dispatch(comunication.setMessage(data))
+  setMessage: data => dispatch(comunication.setMessage(data)),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Signup);

@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { category, comunication } from './../../store/actions/index';
 
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import AddCategory from './../AddCategory/AddCategory';
 import AddIcon from '@material-ui/icons/Add';
 import AttachMoney from '@material-ui/icons/AttachMoney';
 import Description from '@material-ui/icons/Description';
@@ -14,10 +13,12 @@ import FormControl from '@material-ui/core/FormControl';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import Modal from './../Modal/Modal';
 import MomentUtils from '@date-io/moment';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
+import Modal from '../Modal/Modal';
+import AddCategory from '../AddCategory/AddCategory';
+import { category, comunication } from '../../store/actions/index';
 
 import './AddMovement.scss';
 import 'moment/locale/es';
@@ -29,83 +30,80 @@ class AddMovement extends Component {
     this.state = {
       childCategoryDesc: '',
       childCategoryName: '',
-      amountError: false,
-      categoryError: false,
-      isModalOpen: false
+      isModalOpen: false,
     };
   }
 
   addNewCategory = () => {
-    const name = this.state.childCategoryName;
-    const description = this.state.childCategoryDesc;
+    const { childCategoryDesc: description, childCategoryName: name } = this.state;
+    const { addCategory, setMessage } = this.props;
+
     if (name !== '') {
-      this.props.addCategory({ name, description });
+      addCategory({ name, description });
       this.toggleModal();
     } else {
-      this.props.setMessage({
+      setMessage({
         message: 'Verifique los campos',
         type: 'error',
-        kind: 'category'
+        kind: 'category',
       });
     }
   };
 
-  handleAmountChange = event => {
-    this.setState({ amountError: event.target.value === 0 });
-    this.props.handleNewMovement(event);
+  handleAmountChange = (event) => {
+    const { handleNewMovement } = this.props;
+    handleNewMovement(event);
   };
 
-  handleCategoryChange = event => {
-    const name = event.currentTarget.innerText;
+  handleCategoryChange = (event) => {
+    const name = event.currentTarget.innerText !== 'No hay cateogrías' ? event.currentTarget.innerText : '';
     const _id = event.target.value !== undefined ? event.target.value : '';
+    const { handleNewMovement } = this.props;
 
-    this.props.handleNewMovement({
+    handleNewMovement({
       target: {
         name: 'category',
-        value: { name, _id }
-      }
+        value: { name, _id },
+      },
     });
   };
 
-  handleDateChange = date => {
+  handleDateChange = (date) => {
     const utcDate = moment.utc(date).format();
     const event = { target: { name: 'date', value: utcDate } };
-    this.props.handleNewMovement(event);
+    const { handleNewMovement } = this.props;
+    handleNewMovement(event);
   };
 
-  handleChildCategoryDesc = event => {
+  handleChildCategoryDesc = (event) => {
     const childCategoryDesc = event.target.value;
-    if (childCategoryDesc === '') {
-    }
     this.setState({ childCategoryDesc });
   };
 
-  handleChildCategoryName = name => {
+  handleChildCategoryName = (name) => {
     this.setState({ childCategoryName: name });
   };
 
   toggleModal = () => {
-    this.setState({ isModalOpen: !this.state.isModalOpen });
+    const { isModalOpen } = this.state;
+    this.setState({ isModalOpen: !isModalOpen });
   };
 
   render() {
     const {
+      amountError,
+      categoryError,
       categories,
       typeOfMovement,
       newMovement,
       handleNewMovement,
-      categoryError
     } = this.props;
-
-    const cat = categories ? categories : [];
+    const { isModalOpen } = this.state;
+    const cat = categories || [];
 
     return (
       <div className="Addmovement">
-        <h1
-          className={
-            'title ' + (typeOfMovement === 'income' ? 'positive' : 'negative')
-          }
-        >
+        <h1 className={`title ${typeOfMovement === 'income' ? 'positive' : 'negative'}`}>
           {typeOfMovement === 'income' ? 'Ingreso' : 'Egreso'}
         </h1>
         <MuiPickersUtilsProvider utils={MomentUtils} locale="es">
@@ -116,7 +114,7 @@ class AddMovement extends Component {
                 <InputAdornment position="start">
                   <DateRange />
                 </InputAdornment>
-              )
+              ),
             }}
             name="date"
             onChange={date => this.handleDateChange(date)}
@@ -124,7 +122,7 @@ class AddMovement extends Component {
           />
         </MuiPickersUtilsProvider>
         <TextField
-          error={this.state.amountError}
+          error={amountError}
           InputProps={{
             inputProps: { min: 0 },
             startAdornment: (
@@ -132,14 +130,13 @@ class AddMovement extends Component {
                 <AttachMoney />
                 {typeOfMovement === 'income' ? null : '-'}
               </InputAdornment>
-            )
+            ),
           }}
           label="Monto"
           margin="normal"
           name="amount"
           onChange={this.handleAmountChange}
           type="number"
-          value={newMovement.amount}
         />
         <TextField
           InputProps={{
@@ -147,7 +144,7 @@ class AddMovement extends Component {
               <InputAdornment position="start">
                 <Description />
               </InputAdornment>
-            )
+            ),
           }}
           label="Descripción"
           margin="normal"
@@ -156,7 +153,7 @@ class AddMovement extends Component {
           value={newMovement.description}
         />
         <FormControl className="category">
-          <InputLabel htmlFor="cat" error={this.state.categoryError}>
+          <InputLabel htmlFor="cat" error={categoryError}>
             Categoría
           </InputLabel>
           <Select
@@ -164,19 +161,17 @@ class AddMovement extends Component {
             error={categoryError}
             inputProps={{
               name: 'category',
-              id: 'cat'
+              id: 'cat',
             }}
             onChange={this.handleCategoryChange}
             value={newMovement.category._id}
           >
             {cat.length > 0 ? (
-              cat.map((item, index) => {
-                return (
-                  <MenuItem key={item._id + index} value={item._id}>
-                    {item.name}
-                  </MenuItem>
-                );
-              })
+              cat.map(item => (
+                <MenuItem key={item._id} value={item._id}>
+                  {item.name}
+                </MenuItem>
+              ))
             ) : (
               <MenuItem value="">No hay cateogrías</MenuItem>
             )}
@@ -193,7 +188,7 @@ class AddMovement extends Component {
           <Modal
             acceptAction={this.addNewCategory}
             isDraggable={false}
-            isOpen={this.state.isModalOpen}
+            isOpen={isModalOpen}
             title="Agregar Categoría"
             toggleModal={this.toggleModal}
           >
@@ -208,16 +203,33 @@ class AddMovement extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { categories: state.categories };
+AddMovement.propTypes = {
+  addCategory: PropTypes.func.isRequired,
+  setMessage: PropTypes.func.isRequired,
+  handleNewMovement: PropTypes.func.isRequired,
+  amountError: PropTypes.bool,
+  categoryError: PropTypes.bool,
+  categories: PropTypes.array,
+  typeOfMovement: PropTypes.string,
+  newMovement: PropTypes.shape(PropTypes.shape),
 };
+
+AddMovement.defaultProps = {
+  amountError: false,
+  categoryError: false,
+  categories: [],
+  typeOfMovement: 'income',
+  newMovement: {},
+};
+
+const mapStateToProps = state => ({ categories: state.categories });
 
 const mapDispatchToProps = dispatch => ({
   addCategory: data => dispatch(category.addCategory(data)),
-  setMessage: data => dispatch(comunication.setMessage(data))
+  setMessage: data => dispatch(comunication.setMessage(data)),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(AddMovement);

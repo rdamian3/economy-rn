@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import AttachMoney from '@material-ui/icons/AttachMoney';
@@ -18,23 +19,25 @@ import './EditMovement.scss';
 import 'moment/locale/es';
 
 class EditMovement extends Component {
-  handleDateChange = date => {
+  handleDateChange = (date) => {
     const utcDate = moment.utc(date).format();
     const event = { target: { name: 'date', value: utcDate } };
-    this.props.handleEditMovement(event);
+    const { handleEditMovement } = this.props;
+    handleEditMovement(event);
   };
 
-  handleCategoryChange = event => {
-    this.props.handleEditMovement({
+  handleCategoryChange = (event) => {
+    const { handleEditMovement } = this.props;
+    handleEditMovement({
       target: {
         name: 'category',
-        value: { name: event.currentTarget.innerText, _id: event.target.value }
-      }
+        value: { name: event.currentTarget.innerText, _id: event.target.value },
+      },
     });
   };
 
   render() {
-    const cat = this.props.categories;
+    const { categories, movementToEdit, handleEditMovement } = this.props;
     return (
       <div className="EditMovement">
         <MuiPickersUtilsProvider utils={MomentUtils} locale="es">
@@ -45,11 +48,11 @@ class EditMovement extends Component {
                 <InputAdornment position="start">
                   <DateRange />
                 </InputAdornment>
-              )
+              ),
             }}
             name="date"
             onChange={date => this.handleDateChange(date)}
-            value={this.props.movementToEdit.date}
+            value={movementToEdit.date}
           />
         </MuiPickersUtilsProvider>
         <TextField
@@ -58,14 +61,14 @@ class EditMovement extends Component {
               <InputAdornment position="start">
                 <AttachMoney />
               </InputAdornment>
-            )
+            ),
           }}
           label="Monto"
           type="number"
           margin="normal"
           name="amount"
-          value={this.props.movementToEdit.amount}
-          onChange={this.props.handleEditMovement}
+          value={movementToEdit.amount}
+          onChange={handleEditMovement}
         />
         <TextField
           InputProps={{
@@ -73,13 +76,13 @@ class EditMovement extends Component {
               <InputAdornment position="start">
                 <Description />
               </InputAdornment>
-            )
+            ),
           }}
           label="Descripción"
           margin="normal"
           name="description"
-          onChange={this.props.handleEditMovement}
-          value={this.props.movementToEdit.description}
+          onChange={handleEditMovement}
+          value={movementToEdit.description}
         />
         <FormControl className="category">
           <InputLabel htmlFor="editCat">Categoría</InputLabel>
@@ -87,20 +90,18 @@ class EditMovement extends Component {
             className="select"
             inputProps={{
               name: 'category',
-              id: 'editCat'
+              id: 'editCat',
             }}
             ref="categoryValue"
-            value={this.props.movementToEdit.category._id}
+            value={movementToEdit.category._id}
             onChange={this.handleCategoryChange}
           >
-            {cat ? (
-              cat.map((item, index) => {
-                return (
-                  <MenuItem key={item._id + index} value={item._id}>
-                    {item.name}
-                  </MenuItem>
-                );
-              })
+            {categories ? (
+              categories.map(item => (
+                <MenuItem key={item._id} value={item._id}>
+                  {item.name}
+                </MenuItem>
+              ))
             ) : (
               <MenuItem value="">No hay cateogrías</MenuItem>
             )}
@@ -111,8 +112,16 @@ class EditMovement extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { categories: state.categories };
+EditMovement.propTypes = {
+  handleEditMovement: PropTypes.func.isRequired,
+  movementToEdit: PropTypes.object.isRequired,
+  categories: PropTypes.array,
 };
+
+EditMovement.defaultProps = {
+  categories: [],
+};
+
+const mapStateToProps = state => ({ categories: state.categories });
 
 export default connect(mapStateToProps)(EditMovement);

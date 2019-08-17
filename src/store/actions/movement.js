@@ -73,7 +73,6 @@ export function getMovements() {
       session.sessionHandler(userData, userToken, () => {
         axios
           .get(`${API_URL}/movement`, {
-            params: { userId: userData._id },
             headers: {
               'Content-Type': 'application/json',
               authorization: userToken,
@@ -107,58 +106,57 @@ export function addMovement(data) {
     dispatch(comunication.startFetching());
     const userData = JSON.parse(localStorage.getItem('userData'));
     const userToken = localStorage.getItem('userToken');
-    session.sessionHandler(userData, userToken, () => {
-      axios
-        .post(
-          `${API_URL}/movement`,
-          {
-            amount: data.amount,
-            category: data.category,
-            date: data.date,
-            description: data.description,
-            userId: userData._id,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              authorization: userToken,
+    dispatch(
+      session.sessionHandler(userData, userToken, () => {
+        axios
+          .post(
+            `${API_URL}/movement`,
+            {
+              amount: data.amount,
+              category: data.category,
+              date: data.date,
+              description: data.description,
             },
-          },
-        )
-        .then(() => {
-          dispatch(
-            comunication.setMessage({
-              message: 'Movimiento agregado',
-              type: 'success',
-              kind: 'movement',
-            }),
-          );
-          dispatch(getMovements());
-        })
-        .catch((e) => {
-          dispatch(
-            comunication.setMessage({
-              message: e.response.data.message,
-              type: 'error',
-              kind: 'movement',
-            }),
-          );
-          dispatch(comunication.stopFetching());
-        });
-    });
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                authorization: userToken,
+              },
+            },
+          )
+          .then(() => {
+            dispatch(
+              comunication.setMessage({
+                message: 'Movimiento agregado',
+                type: 'success',
+                kind: 'movement',
+              }),
+            );
+            dispatch(getMovements());
+          })
+          .catch((e) => {
+            dispatch(
+              comunication.setMessage({
+                message: e.response.data.message,
+                type: 'error',
+                kind: 'movement',
+              }),
+            );
+            dispatch(comunication.stopFetching());
+          });
+      }),
+    );
   };
 }
 
 export function updateMovement(data) {
   return (dispatch) => {
     dispatch(comunication.startFetching());
-    const userData = JSON.parse(localStorage.getItem('userData'));
     const userToken = localStorage.getItem('userToken');
     axios
       .put(
         `${API_URL}/movement/${data._id}`,
         {
-          userid: userData._id,
           amount: data.amount,
           description: data.description,
           category: data.category,

@@ -106,13 +106,11 @@ export function doSignin(data) {
 export function doUpdate(data) {
   return (dispatch) => {
     dispatch(comunication.startFetching());
-    const userData = JSON.parse(localStorage.getItem('userData'));
     const userToken = localStorage.getItem('userToken');
     axios
       .put(
         `${API_URL}/updateuser`,
         {
-          userId: userData._id,
           email: data.email,
           password: data.password,
           displayName: data.displayName,
@@ -162,10 +160,9 @@ export function doLogout() {
 export function doDelete() {
   return (dispatch) => {
     dispatch(comunication.startFetching());
-    const userData = JSON.parse(localStorage.getItem('userData'));
     const userToken = localStorage.getItem('userToken');
     axios
-      .delete(`${API_URL}/deleteuser/${userData._id}`, {
+      .delete(`${API_URL}/deleteuser`, {
         headers: {
           'Content-Type': 'application/json',
           authorization: userToken,
@@ -242,7 +239,6 @@ export function doUpload(file) {
           'Content-type': 'application/json',
           authorization: userToken,
           bucket: userData.bucket,
-          userId: userData._id,
         },
       })
       .then((res) => {

@@ -13,11 +13,9 @@ export function setCategories(data) {
 export function getCategories() {
   return (dispatch) => {
     dispatch(comunication.startFetching());
-    const userData = JSON.parse(localStorage.getItem('userData'));
     const userToken = localStorage.getItem('userToken');
     axios
       .get(`${API_URL}/category`, {
-        params: { userId: userData._id },
         headers: {
           'Content-Type': 'application/json',
           authorization: userToken,
@@ -36,7 +34,6 @@ export function getCategories() {
 export function addCategory(data) {
   return (dispatch) => {
     dispatch(comunication.startFetching());
-    const userData = JSON.parse(localStorage.getItem('userData'));
     const userToken = localStorage.getItem('userToken');
     axios
       .post(
@@ -44,7 +41,6 @@ export function addCategory(data) {
         {
           description: data.description,
           name: data.name,
-          userId: userData._id,
         },
         {
           headers: {
@@ -80,11 +76,9 @@ export function addCategory(data) {
 export function updateCategory() {
   return (dispatch) => {
     dispatch(comunication.startFetching());
-    const userData = JSON.parse(localStorage.getItem('userData'));
     const userToken = localStorage.getItem('userToken');
     axios
       .get(`${API_URL}/category`, {
-        params: { userId: userData._id },
         headers: {
           'Content-Type': 'application/json',
           authorization: userToken,

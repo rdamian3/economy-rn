@@ -5,7 +5,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import Modal from '../../components/Modal/Modal';
-import { movement, comunication } from '../../store/actions/index';
+import { movement, comunication, category } from '../../store/actions/index';
 import AddMovement from '../../components/AddMovement/AddMovement';
 import MovementsTable from '../../components/MovementsTable/MovementsTable';
 
@@ -92,8 +92,9 @@ class MovementList extends Component {
   };
 
   getMovementsOnStartUp = () => {
-    const { getMovements } = this.props;
+    const { getMovements, getCategories } = this.props;
     getMovements();
+    getCategories();
   };
 
   handleNewMovement = (event) => {
@@ -190,6 +191,7 @@ MovementList.propTypes = {
   addMovement: PropTypes.func.isRequired,
   setMessage: PropTypes.func.isRequired,
   getMovements: PropTypes.func.isRequired,
+  getCategories: PropTypes.func.isRequired,
 };
 
 MovementList.defaultProps = {
@@ -201,6 +203,7 @@ const mapStateToProps = state => ({ movements: state.movements });
 const mapDispatchToProps = dispatch => ({
   addMovement: data => dispatch(movement.addMovement(data)),
   getMovements: () => dispatch(movement.getMovements()),
+  getCategories: () => dispatch(category.getCategories()),
   setMessage: data => dispatch(comunication.setMessage(data)),
 });
 

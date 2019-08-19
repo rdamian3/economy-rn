@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import './Header.scss';
 
-import CategoryIcon from '@material-ui/icons/Category';
 import CloseIcon from '@material-ui/icons/Close';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -46,11 +45,6 @@ class Header extends Component {
           text: 'Reportes',
           link: '/report',
           icon: <PrintIcon color="primary" />,
-        },
-        {
-          text: 'Categorías',
-          link: '/categories',
-          icon: <CategoryIcon color="primary" />,
         },
       ],
     };

@@ -64,7 +64,7 @@ class Reports extends Component {
     } else {
       const filteredMovements = movements
         .filter((el) => {
-          if (moment(el.date).isSameOrAfter(dateFrom) && moment(el.date).isSameOrBefore(dateTo)) {
+          if (moment(el.date).isSameOrAfter(dateFrom, 'day') && moment(el.date).isSameOrBefore(dateTo, 'day')) {
             return true;
           }
           return false;

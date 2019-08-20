@@ -29,6 +29,8 @@ class Reports extends Component {
       movements: [],
       categories: [],
       filteredMovements: [],
+      itemCount: 0,
+      filterTotal: 0,
     };
   }
 
@@ -62,9 +64,16 @@ class Reports extends Component {
         kind: 'category',
       });
     } else {
+      let itemCount = 0;
+      let filterTotal = 0;
       const filteredMovements = movements
         .filter((el) => {
-          if (moment(el.date).isSameOrAfter(dateFrom, 'day') && moment(el.date).isSameOrBefore(dateTo, 'day')) {
+          if (
+            moment(el.date).isSameOrAfter(dateFrom, 'day')
+            && moment(el.date).isSameOrBefore(dateTo, 'day')
+          ) {
+            itemCount += itemCount + 1;
+            filterTotal += el.amount;
             return true;
           }
           return false;
@@ -76,7 +85,7 @@ class Reports extends Component {
           return true;
         });
       if (filteredMovements) {
-        this.setState({ filteredMovements });
+        this.setState({ filteredMovements, itemCount, filterTotal });
       }
     }
   };
@@ -99,7 +108,13 @@ class Reports extends Component {
 
   render() {
     const {
-      dateFrom, dateTo, categories, category, filteredMovements,
+      dateFrom,
+      dateTo,
+      categories,
+      category,
+      filteredMovements,
+      itemCount,
+      filterTotal,
     } = this.state;
 
     return (
@@ -179,6 +194,19 @@ class Reports extends Component {
             </div>
           </div>
           <MovementsTable movements={filteredMovements} />
+          <div className="footer">
+            <span className="count">
+              Cantidad de movimientos:
+              <span className="number">{itemCount}</span>
+            </span>
+            <span className="total">
+              Total:
+              <span className="number">
+$
+                {filterTotal}
+              </span>
+            </span>
+          </div>
         </div>
       </div>
     );

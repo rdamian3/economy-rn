@@ -15,10 +15,12 @@
 
     .body {
       margin-bottom: 30px;
+
       .container {
         display: flex;
         align-items: flex-end;
         padding: 20px 0;
+
         .category {
           min-width: 100px;
         }
@@ -30,7 +32,24 @@
         }
       }
     }
+
+    .footer {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 15px;
+
+      .count {
+        margin-right: 50px;
+      }
+
+      .number {
+        margin-left: 5px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
   }
+
   .option-cell,
   .foot-cell {
     display: none;
@@ -40,8 +59,10 @@
 @media only screen and (max-width: 768px) {
   .Reports {
     padding: 0px 5px;
+
     .container {
       flex-wrap: wrap;
+
       .date-from,
       .date-to {
         width: 90vw;

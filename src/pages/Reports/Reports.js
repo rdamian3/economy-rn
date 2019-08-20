@@ -194,19 +194,21 @@ class Reports extends Component {
             </div>
           </div>
           <MovementsTable movements={filteredMovements} />
-          <div className="footer">
-            <span className="count">
-              Cantidad de movimientos:
-              <span className="number">{itemCount}</span>
-            </span>
-            <span className="total">
-              Total:
-              <span className="number">
-$
-                {filterTotal}
+          {filteredMovements.length !== 0 ? (
+            <div className="footer">
+              <span className="count">
+                Cantidad de movimientos:
+                <span className="number">{itemCount}</span>
               </span>
-            </span>
-          </div>
+              <span className="total">
+                Total:
+                <span className="number">
+$
+                  {filterTotal}
+                </span>
+              </span>
+            </div>
+          ) : null}
         </div>
       </div>
     );

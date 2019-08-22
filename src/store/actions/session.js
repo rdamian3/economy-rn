@@ -65,6 +65,7 @@ export function sessionHandler(userData, userToken, cb) {
           localStorage.removeItem('userToken');
           localStorage.removeItem('userData');
           dispatch(removeUserData());
+          cb();
         });
     } else if (cb) {
       cb();

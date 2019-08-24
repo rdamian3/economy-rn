@@ -2,12 +2,14 @@
 @import './../../utils/mixins.scss';
 
 .MovementList {
+  background-color: $pure-white;
   display: flex;
   justify-content: center;
   min-height: 200px;
   padding: 20px 20px 55px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  
 
   .no-movements {
     @include flex-center-all;

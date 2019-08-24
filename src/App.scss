@@ -16,6 +16,14 @@
       color: $light-blue;
     }
   }
+
+  .MuiButton-label {
+    text-transform: capitalize;
+  }
+}
+
+.logged {
+  background-color: $pure-white;
 }
 
 @media only screen and (min-width: 960px) {
@@ -31,6 +39,15 @@
     background: rgba(255, 0, 0, 0.03);
   }
 }
+
+html {
+  background-image: radial-gradient(circle, $blue, $deep-blue);
+}
+
+html, body, #root, .App {
+  height: 100%;
+}
+
 a,
 body,
 div,
@@ -57,12 +74,7 @@ th,
 tr,
 ul,
 video {
-  border: 0;
   font-family: 'Roboto';
-  font-size: 100%;
-  margin: 0;
-  padding: 0;
-  vertical-align: baseline;
 }
 body {
   line-height: 1;

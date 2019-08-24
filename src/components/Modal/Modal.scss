@@ -13,7 +13,7 @@
   .modal-container {
     background: $pure-white;
     border-radius: 3px;
-    box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.45);
     height: auto;
     left: 50%;
     min-width: 260px;
@@ -33,9 +33,10 @@
       padding: 0 10px;
       .close {
         cursor: pointer;
+        color: $grey;
       }
       span {
-        font-size: 18px;
+        font-size: 16px;
       }
     }
 
@@ -58,12 +59,12 @@
     }
 
     &.positive {
-      border-top: 8px solid $green;
+      border-top: 5px solid $green;
       //border-bottom: 4px solid $green;
     }
 
     &.negative {
-      border-top: 8px solid $red;
+      border-top: 5px solid $red;
     }
   }
 

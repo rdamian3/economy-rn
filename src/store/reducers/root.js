@@ -10,18 +10,18 @@ import {
   CLEAR_MESSAGE,
   SET_TOTAL,
   SET_FILTERED_MOVEMENTS,
-  CLEAR_FILTERED_MOVEMENTS
-} from "./../actions/types";
+  CLEAR_FILTERED_MOVEMENTS,
+} from '../actions/types';
 
-let initialState = {
+const initialState = {
   categories: [],
   isFetching: false,
   movements: [],
   userData: null,
   userToken: null,
-  message: { message: "", type: "", kind: "" },
+  message: { message: '', type: '', kind: '' },
   total: 0,
-  filteredMovements: {}
+  filteredMovements: {},
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -30,7 +30,7 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         userData: null,
-        userToken: null
+        userToken: null,
       };
     case SET_MESSAGE:
       return {
@@ -38,62 +38,62 @@ const rootReducer = (state = initialState, action) => {
         message: {
           message: action.data.message,
           type: action.data.type,
-          kind: action.data.kind
-        }
+          kind: action.data.kind,
+        },
       };
     case CLEAR_MESSAGE:
       return {
         ...state,
         message: {
-          message: "",
-          type: "",
-          kind: ""
-        }
+          message: '',
+          type: '',
+          kind: '',
+        },
       };
     case SET_USER_DATA:
       return {
         ...state,
-        userData: action.data
+        userData: action.data,
       };
     case SET_CATEGORIES:
       return {
         ...state,
-        categories: action.data
+        categories: action.data,
       };
     case SET_MOVEMENTS:
       return {
         ...state,
-        movements: action.data
+        movements: action.data,
       };
     case SET_TOKEN:
       return {
         ...state,
-        userToken: action.data
+        userToken: action.data,
       };
     case SET_TOTAL:
       return {
         ...state,
-        total: action.data
+        total: action.data,
       };
     case SET_FILTERED_MOVEMENTS:
       return {
         ...state,
-        filteredMovements: action.data
+        filteredMovements: action.data,
       };
     case CLEAR_FILTERED_MOVEMENTS:
       return {
         ...state,
-        filteredMovements: {}
+        filteredMovements: {},
       };
     case START_FETCHING:
       return {
         ...state,
-        isFetching: true
+        isFetching: true,
       };
     case STOP_FETCHING:
       return {
         ...state,
-        isFetching: false
+        isFetching: false,
       };
     default:
       return state;

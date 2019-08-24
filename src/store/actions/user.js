@@ -180,14 +180,15 @@ export function doDelete() {
         dispatch(session.removeUserData());
         dispatch(comunication.stopFetching());
       })
-      .catch((res) => {
+      .catch(() => {
         dispatch(
           comunication.setMessage({
-            message: res.response.data.message,
+            message: 'No se pudo eliminar al usuario...',
             type: 'error',
             kind: 'user',
           }),
         );
+        dispatch(comunication.stopFetching());
       });
   };
 }

@@ -6,7 +6,6 @@ import { session } from './store/actions/index';
 
 import Categories from './pages/Categories/Categories';
 import Dashboard from './pages/Dashboard/Dashboard';
-import Footer from './components/Footer/Footer';
 import Forgot from './pages/Forgot/Forgot';
 import Header from './components/Header/Header';
 import MovementList from './pages/MovementList/MovementList';
@@ -58,7 +57,6 @@ class App extends Component {
           <Route path="/profile" component={userToken ? Profile : Signin} />
           <Route path="/report" component={userToken ? Reports : Signin} />
           <Route path="/categories" component={userToken ? Categories : Signin} />
-          {userToken ? <Footer /> : null}
         </div>
         <Snack />
       </BrowserRouter>

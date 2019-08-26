@@ -6,6 +6,7 @@
   flex-direction: column;
   .card {
     @include box-shadow;
+    background-color: $pure-white;
     border-radius: 4px;
     max-width: 270px;
     width: 100%;

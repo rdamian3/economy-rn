@@ -30,6 +30,7 @@ class Header extends Component {
       avatar: '',
       displayName: '',
       isOpen: false,
+      isMenuOpen: false,
       links: [
         {
           text: 'Principal',
@@ -90,9 +91,14 @@ class Header extends Component {
     history.push('/profile');
   };
 
+  toggleMenu() {
+    const { toggleMenu } = this.state;
+    this.setState({ toggleMenu: !toggleMenu });
+  }
+
   render() {
     const {
-      avatar, displayName, isOpen, links,
+      avatar, displayName, isOpen, links, isMenuOpen,
     } = this.state;
 
     return (
@@ -140,7 +146,7 @@ class Header extends Component {
         <div className="user-info">
           <span>{displayName}</span>
           <img className="user-img" src={avatar !== '' ? avatar : defaultAvatar} alt="" />
-          <ul className="user-menu">
+          <ul className={`user-menu ${isMenuOpen ? 'is-open' : null}`} onClick={this.toggleMenu}>
             <li onClick={this.navigateTo}>
               <PersonIcon />
               <span>Tu perfil</span>

@@ -83,6 +83,10 @@
       }
     }
 
+    .is-open {
+      display: block;
+    }
+
     &:hover {
       .user-menu {
         display: block;

@@ -101,6 +101,9 @@ class AddMovement extends Component {
     const { isModalOpen } = this.state;
     const cat = categories || [];
 
+    const startX = document.getElementsByClassName('modal-container').offsetWidth / 2;
+
+
     return (
       <div className="Addmovement">
         <h1 className={`title ${typeOfMovement === 'income' ? 'positive' : 'negative'}`}>
@@ -191,6 +194,7 @@ class AddMovement extends Component {
             isOpen={isModalOpen}
             title="Agregar Categoría"
             toggleModal={this.toggleModal}
+            x={startX}
           >
             <AddCategory
               childCategoryDesc={this.handleChildCategoryDesc}

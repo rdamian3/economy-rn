@@ -47,6 +47,11 @@ class Header extends Component {
           link: '/report',
           icon: <PrintIcon color="primary" />,
         },
+        {
+          text: 'Categorías',
+          link: '/categories',
+          icon: <PrintIcon color="primary" />,
+        },
       ],
     };
   }

@@ -137,6 +137,8 @@ class MovementList extends Component {
       categoryError,
       newMovement,
     } = this.state;
+    const startX = document.getElementsByClassName('modal-container').offsetWidth / 2;
+
     return (
       <div className="MovementList">
         <Fab
@@ -170,7 +172,7 @@ class MovementList extends Component {
           isOpen={isModalOpen}
           typeOfMovement={typeOfMovement}
           toggleModal={this.toggleModal}
-          x={-100}
+          x={-startX}
           y={-220}
         >
           <AddMovement

@@ -53,6 +53,14 @@
       width: 38px;
     }
 
+    .background {
+      @include height-width;
+      @include all-zeros;
+      position: fixed;
+      display: none;
+      z-index: 1201;
+    }
+
     .user-menu {
       @include box-shadow;
       background-color: $pure-white;
@@ -63,6 +71,7 @@
       right: 0;
       top: 33px;
       width: 150px;
+      z-index: 1202;
 
       li {
         font-size: 14px;
@@ -83,10 +92,8 @@
       }
     }
 
-    &:hover {
-      .user-menu {
-        display: block;
-      }
+    .is-open {
+      display: block;
     }
   }
 }

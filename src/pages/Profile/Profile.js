@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -12,7 +12,7 @@ import './Profile.scss';
 
 const defaultAvatar = require('./../../assets/avatar-placeholder.png');
 
-class Profile extends Component {
+class Profile extends PureComponent {
   constructor(props) {
     super(props);
 

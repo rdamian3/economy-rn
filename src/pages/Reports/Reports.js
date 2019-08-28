@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -18,7 +18,7 @@ import { comunication } from '../../store/actions/index';
 
 import './Reports.scss';
 
-class Reports extends Component {
+class Reports extends PureComponent {
   constructor(props) {
     super(props);
 

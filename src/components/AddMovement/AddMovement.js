@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -23,7 +23,7 @@ import { category, comunication } from '../../store/actions/index';
 import './AddMovement.scss';
 import 'moment/locale/es';
 
-class AddMovement extends Component {
+class AddMovement extends PureComponent {
   constructor(props) {
     super(props);
 

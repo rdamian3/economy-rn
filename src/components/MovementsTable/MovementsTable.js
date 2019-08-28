@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -19,7 +19,7 @@ import EditMovement from '../EditMovement/EditMovement';
 import { movement } from '../../store/actions/index';
 import './MovementsTable.scss';
 
-class MovementsTable extends Component {
+class MovementsTable extends PureComponent {
   constructor(props) {
     super(props);
 

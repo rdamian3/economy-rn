@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -18,7 +18,7 @@ import { category } from '../../store/actions/index';
 
 import './Categories.scss';
 
-class Categories extends Component {
+class Categories extends PureComponent {
   constructor(props) {
     super(props);
 

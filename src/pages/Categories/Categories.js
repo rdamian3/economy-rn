@@ -15,6 +15,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Modal from '../../components/Modal/Modal';
 import { category } from '../../store/actions/index';
+import EditCategory from '../../components/EditCategory/EditCategory';
 
 import './Categories.scss';
 
@@ -28,7 +29,7 @@ class Categories extends PureComponent {
       page: 0,
       rowsPerPage: 8,
       sortBy: { type: 'date', asc: true },
-      movementToEdit: {},
+      categoryToEdit: { name: '', description: '' },
     };
   }
 
@@ -59,6 +60,12 @@ class Categories extends PureComponent {
     return a[sortBy.type] > b[sortBy.type] ? -1 : 1;
   };
 
+  doUpdateCategory = () => {
+    const { categoryToEdit } = this.state;
+    const { updateCategory } = this.props;
+    updateCategory(categoryToEdit);
+  };
+
   handleChangePage = (event, page) => {
     this.setState({ page });
   };
@@ -69,7 +76,7 @@ class Categories extends PureComponent {
   };
 
   handleUpdateCategory = (data) => {
-    this.setState({ movementToEdit: data });
+    this.setState({ categoryToEdit: data });
     this.toggleModal();
   };
 
@@ -85,7 +92,7 @@ class Categories extends PureComponent {
 
   render() {
     const {
-      categories, isModalOpen, page, rowsPerPage, sortBy,
+      categories, isModalOpen, page, rowsPerPage, sortBy, categoryToEdit,
     } = this.state;
     if (categories.length === 0) {
       return (
@@ -173,13 +180,17 @@ class Categories extends PureComponent {
           </Table>
           <Modal
             acceptAction={this.doUpdateCategory}
+            categoryToEdit={categoryToEdit}
             isDraggable
+            handleUpdateCategory={this.handleUpdateCategory}
             isOpen={isModalOpen}
             title="Editar Movimiento"
             toggleModal={this.toggleModal}
             x={-100}
             y={-220}
-          />
+          >
+            <EditCategory />
+          </Modal>
         </div>
       </div>
     );
@@ -189,6 +200,7 @@ class Categories extends PureComponent {
 Categories.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.array),
   deleteCategory: PropTypes.func.isRequired,
+  updateCategory: PropTypes.func.isRequired,
 };
 
 Categories.defaultProps = {

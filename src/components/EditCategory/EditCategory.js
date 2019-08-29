@@ -31,12 +31,12 @@ class EditCategory extends PureComponent {
 
   handleCategoryChange = () => {
     const { categoryToEdit } = this.state;
-    const { handleEditCategory } = this.props;
-    handleEditCategory({ categoryToEdit });
+    const { setCategoryToState } = this.props;
+    setCategoryToState({ categoryToEdit });
   };
 
   render() {
-    const { categoryToEdit } = this.state;
+    const { categoryToEdit } = this.props;
     return (
       <div className="EditCategory">
         <TextField
@@ -73,7 +73,7 @@ class EditCategory extends PureComponent {
 }
 
 EditCategory.propTypes = {
-  handleEditCategory: PropTypes.func.isRequired,
+  setCategoryToState: PropTypes.func.isRequired,
   categoryToEdit: PropTypes.object.isRequired,
 };
 

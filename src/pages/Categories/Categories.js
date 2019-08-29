@@ -66,6 +66,8 @@ class Categories extends PureComponent {
     updateCategory(categoryToEdit);
   };
 
+  setCategoryToState = (data) => {};
+
   handleChangePage = (event, page) => {
     this.setState({ page });
   };
@@ -75,12 +77,13 @@ class Categories extends PureComponent {
     this.setState({ rowsPerPage });
   };
 
-  handleUpdateCategory = (data) => {
+  showUpdateCategory = (data) => {
     this.setState({ categoryToEdit: data });
     this.toggleModal();
   };
 
-  handleDeleteCategory = (data) => {
+  showDeleteCategory = (data) => {
+    // TO-DO: Ask for confirmation
     const { deleteCategory } = this.props;
     deleteCategory(data);
   };
@@ -143,17 +146,14 @@ class Categories extends PureComponent {
                         {row.description}
                       </TableCell>
                       <TableCell align="right" className="option-cell">
-                        <IconButton
-                          aria-label="Edit"
-                          onClick={() => this.handleUpdateCategory(row)}
-                        >
+                        <IconButton aria-label="Edit" onClick={() => this.showUpdateCategory(row)}>
                           <EditIcon />
                         </IconButton>
                       </TableCell>
                       <TableCell align="right" className="option-cell">
                         <IconButton
                           aria-label="Delete"
-                          onClick={() => this.handleDeleteCategory(row)}
+                          onClick={() => this.showDeleteCategory(row)}
                         >
                           <DeleteIcon />
                         </IconButton>
@@ -180,16 +180,17 @@ class Categories extends PureComponent {
           </Table>
           <Modal
             acceptAction={this.doUpdateCategory}
-            categoryToEdit={categoryToEdit}
             isDraggable
-            handleUpdateCategory={this.handleUpdateCategory}
             isOpen={isModalOpen}
             title="Editar Movimiento"
             toggleModal={this.toggleModal}
             x={-100}
             y={-220}
           >
-            <EditCategory />
+            <EditCategory
+              categoryToEdit={categoryToEdit}
+              setCategoryToState={this.setCategoryToState}
+            />
           </Modal>
         </div>
       </div>

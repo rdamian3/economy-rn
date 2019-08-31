@@ -19,20 +19,16 @@ class EditCategory extends PureComponent {
     };
   }
 
-  handleEdit = (event) => {
+  handleCategoryChange = (event) => {
     const { name } = event.target;
     const { value } = event.target;
+    const { handleEditCategory } = this.props;
     this.setState((prevState) => {
       const categoryToEdit = Object.assign({}, prevState.categoryToEdit);
       categoryToEdit[name] = value;
       return { categoryToEdit };
     });
-  };
-
-  handleCategoryChange = () => {
-    const { categoryToEdit } = this.state;
-    const { setCategoryToState } = this.props;
-    setCategoryToState({ categoryToEdit });
+    handleEditCategory(event);
   };
 
   render() {
@@ -50,7 +46,7 @@ class EditCategory extends PureComponent {
           label="Nombre"
           margin="normal"
           name="name"
-          onChange={this.handleEdit}
+          onChange={this.handleCategoryChange}
           value={categoryToEdit.name}
         />
         <TextField
@@ -64,7 +60,7 @@ class EditCategory extends PureComponent {
           label="Descripción"
           margin="normal"
           name="description"
-          onChange={this.handleEdit}
+          onChange={this.handleCategoryChange}
           value={categoryToEdit.description}
         />
       </div>
@@ -73,8 +69,8 @@ class EditCategory extends PureComponent {
 }
 
 EditCategory.propTypes = {
-  setCategoryToState: PropTypes.func.isRequired,
   categoryToEdit: PropTypes.object.isRequired,
+  handleEditCategory: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({ categories: state.categories });

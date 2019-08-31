@@ -61,12 +61,20 @@ class Categories extends PureComponent {
   };
 
   doUpdateCategory = () => {
-    const { categoryToEdit } = this.state;
     const { updateCategory } = this.props;
+    const { categoryToEdit } = this.state;
     updateCategory(categoryToEdit);
   };
 
-  setCategoryToState = (data) => {};
+  handleEditCategory = (event) => {
+    const { name } = event.target;
+    const { value } = event.target;
+    this.setState((prevState) => {
+      const categoryToEdit = Object.assign({}, prevState.categoryToEdit);
+      categoryToEdit[name] = value;
+      return { categoryToEdit };
+    });
+  };
 
   handleChangePage = (event, page) => {
     this.setState({ page });
@@ -77,12 +85,12 @@ class Categories extends PureComponent {
     this.setState({ rowsPerPage });
   };
 
-  showUpdateCategory = (data) => {
+  handleUpdateCategory = (data) => {
     this.setState({ categoryToEdit: data });
     this.toggleModal();
   };
 
-  showDeleteCategory = (data) => {
+  handleDeleteCategory = (data) => {
     // TO-DO: Ask for confirmation
     const { deleteCategory } = this.props;
     deleteCategory(data);
@@ -146,14 +154,17 @@ class Categories extends PureComponent {
                         {row.description}
                       </TableCell>
                       <TableCell align="right" className="option-cell">
-                        <IconButton aria-label="Edit" onClick={() => this.showUpdateCategory(row)}>
+                        <IconButton
+                          aria-label="Edit"
+                          onClick={() => this.handleUpdateCategory(row)}
+                        >
                           <EditIcon />
                         </IconButton>
                       </TableCell>
                       <TableCell align="right" className="option-cell">
                         <IconButton
                           aria-label="Delete"
-                          onClick={() => this.showDeleteCategory(row)}
+                          onClick={() => this.handleDeleteCategory(row)}
                         >
                           <DeleteIcon />
                         </IconButton>
@@ -182,14 +193,14 @@ class Categories extends PureComponent {
             acceptAction={this.doUpdateCategory}
             isDraggable
             isOpen={isModalOpen}
-            title="Editar Movimiento"
+            title="Editar Categoría"
             toggleModal={this.toggleModal}
             x={-100}
             y={-220}
           >
             <EditCategory
               categoryToEdit={categoryToEdit}
-              setCategoryToState={this.setCategoryToState}
+              handleEditCategory={this.handleEditCategory}
             />
           </Modal>
         </div>
@@ -199,13 +210,13 @@ class Categories extends PureComponent {
 }
 
 Categories.propTypes = {
-  categories: PropTypes.arrayOf(PropTypes.array),
+  categories: PropTypes.array,
   deleteCategory: PropTypes.func.isRequired,
   updateCategory: PropTypes.func.isRequired,
 };
 
 Categories.defaultProps = {
-  categories: PropTypes.array,
+  categories: [],
 };
 
 const mapStateToProps = state => ({ categories: state.categories, message: state.message });

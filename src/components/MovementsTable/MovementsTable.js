@@ -112,6 +112,7 @@ class MovementsTable extends PureComponent {
   };
 
   handleDeleteMovement = (data) => {
+    // TO-DO: Ask for confirmation
     const { deleteMovement } = this.props;
     deleteMovement(data);
   };

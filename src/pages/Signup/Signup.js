@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -10,7 +10,7 @@ import { user, comunication } from '../../store/actions/index';
 
 import './Signup.scss';
 
-class Signup extends Component {
+class Signup extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {

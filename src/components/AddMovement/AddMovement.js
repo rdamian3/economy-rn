@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -23,7 +23,7 @@ import { category, comunication } from '../../store/actions/index';
 import './AddMovement.scss';
 import 'moment/locale/es';
 
-class AddMovement extends Component {
+class AddMovement extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -100,6 +100,9 @@ class AddMovement extends Component {
     } = this.props;
     const { isModalOpen } = this.state;
     const cat = categories || [];
+
+    const startX = document.getElementsByClassName('modal-container').offsetWidth / 2;
+
 
     return (
       <div className="Addmovement">
@@ -191,6 +194,7 @@ class AddMovement extends Component {
             isOpen={isModalOpen}
             title="Agregar Categoría"
             toggleModal={this.toggleModal}
+            x={startX}
           >
             <AddCategory
               childCategoryDesc={this.handleChildCategoryDesc}

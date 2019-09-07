@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Fab from '@material-ui/core/Fab';
@@ -11,7 +11,7 @@ import MovementsTable from '../../components/MovementsTable/MovementsTable';
 
 import './MovementList.scss';
 
-class MovementList extends Component {
+class MovementList extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -137,6 +137,8 @@ class MovementList extends Component {
       categoryError,
       newMovement,
     } = this.state;
+    const startX = document.getElementsByClassName('modal-container').offsetWidth / 2;
+
     return (
       <div className="MovementList">
         <Fab
@@ -170,7 +172,7 @@ class MovementList extends Component {
           isOpen={isModalOpen}
           typeOfMovement={typeOfMovement}
           toggleModal={this.toggleModal}
-          x={-100}
+          x={-startX}
           y={-220}
         >
           <AddMovement

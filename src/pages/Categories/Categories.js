@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -15,10 +15,11 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Modal from '../../components/Modal/Modal';
 import { category } from '../../store/actions/index';
+import EditCategory from '../../components/EditCategory/EditCategory';
 
 import './Categories.scss';
 
-class Categories extends Component {
+class Categories extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -28,7 +29,7 @@ class Categories extends Component {
       page: 0,
       rowsPerPage: 8,
       sortBy: { type: 'date', asc: true },
-      movementToEdit: {},
+      categoryToEdit: { name: '', description: '' },
     };
   }
 
@@ -59,6 +60,22 @@ class Categories extends Component {
     return a[sortBy.type] > b[sortBy.type] ? -1 : 1;
   };
 
+  doUpdateCategory = () => {
+    const { updateCategory } = this.props;
+    const { categoryToEdit } = this.state;
+    updateCategory(categoryToEdit);
+  };
+
+  handleEditCategory = (event) => {
+    const { name } = event.target;
+    const { value } = event.target;
+    this.setState((prevState) => {
+      const categoryToEdit = Object.assign({}, prevState.categoryToEdit);
+      categoryToEdit[name] = value;
+      return { categoryToEdit };
+    });
+  };
+
   handleChangePage = (event, page) => {
     this.setState({ page });
   };
@@ -69,11 +86,12 @@ class Categories extends Component {
   };
 
   handleUpdateCategory = (data) => {
-    this.setState({ movementToEdit: data });
+    this.setState({ categoryToEdit: data });
     this.toggleModal();
   };
 
   handleDeleteCategory = (data) => {
+    // TO-DO: Ask for confirmation
     const { deleteCategory } = this.props;
     deleteCategory(data);
   };
@@ -85,7 +103,7 @@ class Categories extends Component {
 
   render() {
     const {
-      categories, isModalOpen, page, rowsPerPage, sortBy,
+      categories, isModalOpen, page, rowsPerPage, sortBy, categoryToEdit,
     } = this.state;
     if (categories.length === 0) {
       return (
@@ -175,11 +193,16 @@ class Categories extends Component {
             acceptAction={this.doUpdateCategory}
             isDraggable
             isOpen={isModalOpen}
-            title="Editar Movimiento"
+            title="Editar Categoría"
             toggleModal={this.toggleModal}
             x={-100}
             y={-220}
-          />
+          >
+            <EditCategory
+              categoryToEdit={categoryToEdit}
+              handleEditCategory={this.handleEditCategory}
+            />
+          </Modal>
         </div>
       </div>
     );
@@ -187,12 +210,13 @@ class Categories extends Component {
 }
 
 Categories.propTypes = {
-  categories: PropTypes.arrayOf(PropTypes.array),
+  categories: PropTypes.array,
   deleteCategory: PropTypes.func.isRequired,
+  updateCategory: PropTypes.func.isRequired,
 };
 
 Categories.defaultProps = {
-  categories: PropTypes.array,
+  categories: [],
 };
 
 const mapStateToProps = state => ({ categories: state.categories, message: state.message });

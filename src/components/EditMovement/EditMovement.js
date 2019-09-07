@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -18,7 +18,7 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import './EditMovement.scss';
 import 'moment/locale/es';
 
-class EditMovement extends Component {
+class EditMovement extends PureComponent {
   handleDateChange = (date) => {
     const utcDate = moment.utc(date).format();
     const event = { target: { name: 'date', value: utcDate } };

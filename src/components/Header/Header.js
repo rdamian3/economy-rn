@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
@@ -22,7 +22,7 @@ import { user } from '../../store/actions/index';
 
 const defaultAvatar = require('./../../assets/avatar-placeholder.png');
 
-class Header extends Component {
+class Header extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -45,6 +45,11 @@ class Header extends Component {
         {
           text: 'Reportes',
           link: '/report',
+          icon: <PrintIcon color="primary" />,
+        },
+        {
+          text: 'Categorías',
+          link: '/categories',
           icon: <PrintIcon color="primary" />,
         },
       ],

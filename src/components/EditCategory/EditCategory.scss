@@ -1,0 +1,7 @@
+@import "../../utils/mixins.scss";
+
+.EditCategory {
+  @include flex-center-all;
+  flex-direction: column;
+  width: 100%;
+}

@@ -132,6 +132,7 @@ export function addMovement(data) {
                 kind: 'movement',
               }),
             );
+            dispatch(session.reload());
           })
           .catch((e) => {
             dispatch(
@@ -176,6 +177,7 @@ export function updateMovement(data) {
             kind: 'movement_update',
           }),
         );
+        dispatch(session.reload());
       })
       .catch(() => {
         dispatch(

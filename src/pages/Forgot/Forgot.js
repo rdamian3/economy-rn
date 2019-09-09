@@ -19,7 +19,7 @@ class Forgot extends PureComponent {
     };
   }
 
-  componentWillUpdate(prevProps) {
+  componentDidUpdate(prevProps) {
     const { message, history } = this.props;
     if (prevProps.message !== message && message.kind === 'user' && message.type === 'success') {
       history.push('/signin');
@@ -35,8 +35,11 @@ class Forgot extends PureComponent {
 
   doForgot = () => {
     const { email, emailError } = this.state;
+    const { doForgot } = this.props;
+
     if (!emailError && email !== '') {
       this.setState({ emailError: false });
+      doForgot(email);
     } else {
       this.setState({ emailError: true });
     }
@@ -86,16 +89,18 @@ class Forgot extends PureComponent {
 }
 
 Forgot.propTypes = {
-  message: PropTypes.string.isRequired,
+  message: PropTypes.object,
+  doForgot: PropTypes.func.isRequired,
   history: PropTypes.object,
   isFetching: PropTypes.bool.isRequired,
 };
 
 Forgot.defaultProps = {
   history: null,
+  message: {},
 };
 
-const mapStateToProps = state => ({ isFetching: state.isFetching });
+const mapStateToProps = state => ({ isFetching: state.isFetching, message: state.message });
 
 const mapDispatchToProps = dispatch => ({
   doForgot: data => dispatch(user.doForgot(data)),

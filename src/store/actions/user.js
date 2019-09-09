@@ -1,7 +1,5 @@
 import axios from 'axios';
-import {
-  comunication, movement, category, session,
-} from './index';
+import { comunication, session } from './index';
 import API_URL from '../../utils/utils';
 import userResponse from '../../utils/responseHandler';
 
@@ -27,9 +25,6 @@ export function doSignup(data) {
         const userToken = res.data.token;
         dispatch(
           session.sessionHandler(userData, userToken, () => {
-            dispatch(movement.getMovements());
-            dispatch(category.getCategories());
-
             const message = userResponse(res);
             dispatch(
               comunication.setMessage({
@@ -75,8 +70,6 @@ export function doSignin(data) {
         const userToken = res.data.token;
         dispatch(
           session.sessionHandler(userData, userToken, () => {
-            dispatch(movement.getMovements());
-            dispatch(category.getCategories());
             const message = userResponse(res);
             dispatch(
               comunication.setMessage({
@@ -214,6 +207,7 @@ export function doForgot(email) {
             kind: 'user',
           }),
         );
+        dispatch(comunication.stopFetching());
       })
       .catch((res) => {
         dispatch(
@@ -223,6 +217,7 @@ export function doForgot(email) {
             kind: 'user',
           }),
         );
+        dispatch(comunication.stopFetching());
       });
   };
 }

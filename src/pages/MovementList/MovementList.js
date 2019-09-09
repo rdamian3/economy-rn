@@ -5,7 +5,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import Modal from '../../components/Modal/Modal';
-import { movement, comunication, category } from '../../store/actions/index';
+import { movement, comunication } from '../../store/actions/index';
 import AddMovement from '../../components/AddMovement/AddMovement';
 import MovementsTable from '../../components/MovementsTable/MovementsTable';
 
@@ -27,23 +27,30 @@ class MovementList extends PureComponent {
       },
       typeOfMovement: 'income',
     };
+  }
 
-    this.getMovementsOnStartUp();
+  componentDidMount() {
+    this.setMovementsToState();
   }
 
   componentDidUpdate(prevProps) {
     const { movements } = this.props;
     if (prevProps.movements !== movements) {
-      const movs = movements.map(el => ({
-        _id: el._id,
-        amount: el.amount,
-        category: { name: el.category.name, _id: el.category._id },
-        date: el.date,
-        description: el.description,
-      }));
-      this.setState({ movs });
+      this.setMovementsToState();
     }
   }
+
+  setMovementsToState = () => {
+    const { movements } = this.props;
+    const movs = movements.map(el => ({
+      _id: el._id,
+      amount: el.amount,
+      category: { name: el.category.name, _id: el.category._id },
+      date: el.date,
+      description: el.description,
+    }));
+    this.setState({ movs });
+  };
 
   addNewMovement = () => {
     const { newMovement, typeOfMovement } = this.state;
@@ -89,12 +96,6 @@ class MovementList extends PureComponent {
       newMovement[name] = value;
       return { newMovement };
     });
-  };
-
-  getMovementsOnStartUp = () => {
-    const { getMovements, getCategories } = this.props;
-    getMovements();
-    getCategories();
   };
 
   handleNewMovement = (event) => {
@@ -192,8 +193,6 @@ MovementList.propTypes = {
   movements: PropTypes.array,
   addMovement: PropTypes.func.isRequired,
   setMessage: PropTypes.func.isRequired,
-  getMovements: PropTypes.func.isRequired,
-  getCategories: PropTypes.func.isRequired,
 };
 
 MovementList.defaultProps = {
@@ -204,8 +203,6 @@ const mapStateToProps = state => ({ movements: state.movements });
 
 const mapDispatchToProps = dispatch => ({
   addMovement: data => dispatch(movement.addMovement(data)),
-  getMovements: () => dispatch(movement.getMovements()),
-  getCategories: () => dispatch(category.getCategories()),
   setMessage: data => dispatch(comunication.setMessage(data)),
 });
 

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { comunication } from './index';
+import { comunication, movement, category } from './index';
 import { REMOVE_USER_DATA, SET_TOKEN, SET_USER_DATA } from './types';
 import API_URL from '../../utils/utils';
 
@@ -20,6 +20,13 @@ export function setToken(data) {
   return {
     type: SET_TOKEN,
     data,
+  };
+}
+
+export function reload() {
+  return (dispatch) => {
+    dispatch(movement.getMovements());
+    dispatch(category.getCategories());
   };
 }
 

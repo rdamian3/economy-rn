@@ -57,7 +57,6 @@ export function addCategory(data) {
             kind: 'category',
           }),
         );
-        dispatch(getCategories());
         dispatch(comunication.stopFetching());
       })
       .catch((e) => {
@@ -107,7 +106,6 @@ export function deleteCategory(data) {
         },
       })
       .then(() => {
-        dispatch(getCategories());
         dispatch(comunication.stopFetching());
       })
       .catch(() => {

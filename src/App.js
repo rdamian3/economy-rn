@@ -33,9 +33,10 @@ class App extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    const { userToken, sessionHandler } = this.props;
+    const { userToken, sessionHandler, reload } = this.props;
     if (prevProps.userToken !== userToken) {
       sessionHandler(null, null, () => {
+        reload();
         this.setState({ loaded: true });
       });
     }
@@ -66,6 +67,7 @@ class App extends PureComponent {
 
 App.propTypes = {
   sessionHandler: PropTypes.func.isRequired,
+  reload: PropTypes.func.isRequired,
   userToken: PropTypes.string,
 };
 
@@ -78,6 +80,9 @@ const mapStateToProps = state => ({ userToken: state.userToken });
 const mapDispatchToProps = dispatch => ({
   sessionHandler: (param, param2, param3) => {
     dispatch(session.sessionHandler(param, param2, param3));
+  },
+  reload: () => {
+    dispatch(session.reload());
   },
 });
 

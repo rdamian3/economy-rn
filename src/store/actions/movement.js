@@ -132,7 +132,6 @@ export function addMovement(data) {
                 kind: 'movement',
               }),
             );
-            dispatch(getMovements());
           })
           .catch((e) => {
             dispatch(
@@ -170,7 +169,6 @@ export function updateMovement(data) {
         },
       )
       .then(() => {
-        dispatch(getMovements());
         dispatch(
           comunication.setMessage({
             message: 'Movimiento actualizado',
@@ -203,7 +201,6 @@ export function deleteMovement(data) {
         },
       })
       .then(() => {
-        dispatch(getMovements());
         dispatch(comunication.stopFetching());
       })
       .catch(() => {

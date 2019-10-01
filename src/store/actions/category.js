@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { comunication } from './index';
+import { comunication, session } from './index';
 import { SET_CATEGORIES } from './types';
 import API_URL from '../../utils/utils';
 
@@ -57,6 +57,7 @@ export function addCategory(data) {
             kind: 'category',
           }),
         );
+        dispatch(session.reload());
         dispatch(comunication.stopFetching());
       })
       .catch((e) => {
@@ -72,12 +73,13 @@ export function addCategory(data) {
   };
 }
 
-export function updateCategory() {
+export function updateCategory(data) {
+  debugger;
   return (dispatch) => {
     dispatch(comunication.startFetching());
     const userToken = localStorage.getItem('userToken');
     axios
-      .get(`${API_URL}/category`, {
+      .get(`${API_URL}/category/${data._id}`, {
         headers: {
           'Content-Type': 'application/json',
           authorization: userToken,
@@ -86,6 +88,7 @@ export function updateCategory() {
       .then((res) => {
         dispatch(setCategories(res.data.categories));
         dispatch(comunication.stopFetching());
+        dispatch(session.reload());
       })
       .catch(() => {
         dispatch(comunication.stopFetching());
@@ -107,6 +110,7 @@ export function deleteCategory(data) {
       })
       .then(() => {
         dispatch(comunication.stopFetching());
+        dispatch(session.reload());
       })
       .catch(() => {
         dispatch(comunication.stopFetching());

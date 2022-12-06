@@ -24,6 +24,7 @@ const initialState = {
   filteredMovements: {},
 };
 
+// eslint-disable-next-line default-param-last
 const rootReducer = (state = initialState, action) => {
   switch (action.type) {
     case REMOVE_USER_DATA:

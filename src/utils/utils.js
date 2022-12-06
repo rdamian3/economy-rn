@@ -1,3 +1,3 @@
-const API_URL = 'https://vueconomy-api.herokuapp.com/api';
+const API_URL = 'http://economy.servehttp.com/api';
 
 export default API_URL;

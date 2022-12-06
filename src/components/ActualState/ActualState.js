@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import './ActualState.scss';
 
-const ActualState = (props) => {
+function ActualState(props) {
   const { total } = props;
   const { monthBalance } = props;
 
@@ -16,7 +16,7 @@ const ActualState = (props) => {
           <div className="global">
             <div className="title">Tu balance global</div>
             <span className={`total ${total >= 0 ? 'possitive' : 'negative'}`}>
-$
+              $
               {total}
             </span>
           </div>
@@ -45,7 +45,7 @@ $
       <div className="foot-text" />
     </div>
   );
-};
+}
 
 ActualState.propTypes = {
   monthBalance: PropTypes.number.isRequired,
@@ -54,8 +54,8 @@ ActualState.propTypes = {
 
 const mapStateToProps = ({ movements, total }) => {
   const monthBalance = movements
-    .map(el => ({ amount: el.amount, month: moment(el.date).format('M') }))
-    .filter(el => el.month === moment().format('M'))
+    .map((el) => ({ amount: el.amount, month: moment(el.date).format('M') }))
+    .filter((el) => el.month === moment().format('M'))
     .reduce((acc, current) => acc + current.amount, 0);
 
   return {

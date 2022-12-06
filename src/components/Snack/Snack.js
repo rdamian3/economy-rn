@@ -10,7 +10,7 @@ import { comunication } from '../../store/actions/index';
 
 import './Snack.scss';
 
-const Snack = (props) => {
+function Snack(props) {
   const { messageMessage, clearMessages, messageType } = props;
   return (
     <div className="Snack">
@@ -36,7 +36,7 @@ const Snack = (props) => {
       </Snackbar>
     </div>
   );
-};
+}
 
 Snack.propTypes = {
   messageMessage: PropTypes.string,
@@ -49,12 +49,12 @@ Snack.defaultProps = {
   clearMessages: () => {},
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   messageMessage: state.message.message,
   messageType: state.message.type,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   clearMessages: () => dispatch(comunication.clearMessage()),
 });
 

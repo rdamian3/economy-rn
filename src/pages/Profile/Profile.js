@@ -4,13 +4,12 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { user, comunication } from '../../store/actions/index';
 import './Profile.scss';
 
-const defaultAvatar = require('./../../assets/avatar-placeholder.png');
+const defaultAvatar = require('../../assets/avatar-placeholder.png');
 
 class Profile extends PureComponent {
   constructor(props) {
@@ -22,7 +21,6 @@ class Profile extends PureComponent {
       emailError: false,
       displayName: '',
       displayNameError: false,
-      password: '',
       passwordError: false,
       passwordRepeatError: false,
     };
@@ -50,12 +48,6 @@ class Profile extends PureComponent {
     }
   }
 
-  handleEnterKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      this.doUpdate();
-    }
-  };
-
   handleOnEmailChange = (event) => {
     const email = event.target.value;
     const regEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -67,19 +59,6 @@ class Profile extends PureComponent {
     const displayName = event.target.value;
     const displayNameError = displayName.length < 2;
     this.setState({ displayName, displayNameError });
-  };
-
-  handleOnPasswordChange = (event) => {
-    const password = event.target.value;
-    const passwordError = password.length < 8;
-    this.setState({ password, passwordError });
-  };
-
-  handleOnPasswordRepeatChange = (event) => {
-    const { password } = this.state;
-    const passwordRepeat = event.target.value;
-    const passwordRepeatError = passwordRepeat !== password;
-    this.setState({ passwordRepeatError });
   };
 
   doUpload = (evt) => {
@@ -220,9 +199,9 @@ class Profile extends PureComponent {
             </div>
           </div>
           <div className="footer">
-            <Link color="error" onClick={this.doDelete} className="delete">
+            <Button onClick={this.doDelete}>
               <span>Eliminar mi cuenta</span>
-            </Link>
+            </Button>
             <Button color="primary" onClick={this.doUpdate} variant="contained">
               {isFetching ? (
                 <CircularProgress className="progress" size={24} />
@@ -264,13 +243,13 @@ Profile.defaultProps = {
   },
 };
 
-const mapStateToProps = state => ({ isFetching: state.isFetching, userData: state.userData });
+const mapStateToProps = (state) => ({ isFetching: state.isFetching, userData: state.userData });
 
-const mapDispatchToProps = dispatch => ({
-  doUpload: data => dispatch(user.doUpload(data)),
-  doUpdate: data => dispatch(user.doUpdate(data)),
+const mapDispatchToProps = (dispatch) => ({
+  doUpload: (data) => dispatch(user.doUpload(data)),
+  doUpdate: (data) => dispatch(user.doUpdate(data)),
   doDelete: () => dispatch(user.doDelete()),
-  setMessage: data => dispatch(comunication.setMessage(data)),
+  setMessage: (data) => dispatch(comunication.setMessage(data)),
 });
 
 export default connect(

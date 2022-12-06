@@ -42,7 +42,7 @@ class MovementList extends PureComponent {
 
   setMovementsToState = () => {
     const { movements } = this.props;
-    const movs = movements.map(el => ({
+    const movs = movements.map((el) => ({
       _id: el._id,
       amount: el.amount,
       category: { name: el.category.name, _id: el.category._id },
@@ -92,7 +92,7 @@ class MovementList extends PureComponent {
 
   dynamicStateChanger = (name, value) => {
     this.setState((prevState) => {
-      const newMovement = Object.assign({}, prevState.newMovement);
+      const newMovement = { ...prevState.newMovement };
       newMovement[name] = value;
       return { newMovement };
     });
@@ -199,11 +199,11 @@ MovementList.defaultProps = {
   movements: [],
 };
 
-const mapStateToProps = state => ({ movements: state.movements });
+const mapStateToProps = (state) => ({ movements: state.movements });
 
-const mapDispatchToProps = dispatch => ({
-  addMovement: data => dispatch(movement.addMovement(data)),
-  setMessage: data => dispatch(comunication.setMessage(data)),
+const mapDispatchToProps = (dispatch) => ({
+  addMovement: (data) => dispatch(movement.addMovement(data)),
+  setMessage: (data) => dispatch(comunication.setMessage(data)),
 });
 
 export default connect(

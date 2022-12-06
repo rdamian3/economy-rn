@@ -100,10 +100,10 @@ Forgot.defaultProps = {
   message: {},
 };
 
-const mapStateToProps = state => ({ isFetching: state.isFetching, message: state.message });
+const mapStateToProps = (state) => ({ isFetching: state.isFetching, message: state.message });
 
-const mapDispatchToProps = dispatch => ({
-  doForgot: data => dispatch(user.doForgot(data)),
+const mapDispatchToProps = (dispatch) => ({
+  doForgot: (data) => dispatch(user.doForgot(data)),
 });
 
 export default connect(

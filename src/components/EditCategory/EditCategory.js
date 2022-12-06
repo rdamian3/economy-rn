@@ -24,7 +24,7 @@ class EditCategory extends PureComponent {
     const { value } = event.target;
     const { handleEditCategory } = this.props;
     this.setState((prevState) => {
-      const categoryToEdit = Object.assign({}, prevState.categoryToEdit);
+      const categoryToEdit = { ...prevState.categoryToEdit };
       categoryToEdit[name] = value;
       return { categoryToEdit };
     });
@@ -73,6 +73,6 @@ EditCategory.propTypes = {
   handleEditCategory: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({ categories: state.categories });
+const mapStateToProps = (state) => ({ categories: state.categories });
 
 export default connect(mapStateToProps)(EditCategory);

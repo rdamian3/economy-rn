@@ -137,7 +137,7 @@ class Reports extends PureComponent {
                       ),
                     }}
                     name="date-from"
-                    onChange={date => this.handleDateFromChange(date)}
+                    onChange={(date) => this.handleDateFromChange(date)}
                     value={dateFrom}
                   />
                 </MuiPickersUtilsProvider>
@@ -154,7 +154,7 @@ class Reports extends PureComponent {
                       ),
                     }}
                     name="date-to"
-                    onChange={date => this.handleDateToChange(date)}
+                    onChange={(date) => this.handleDateToChange(date)}
                     value={dateTo}
                   />
                 </MuiPickersUtilsProvider>
@@ -171,7 +171,7 @@ class Reports extends PureComponent {
                   value={category._id}
                 >
                   {categories.length > 0 ? (
-                    categories.map(item => (
+                    categories.map((item) => (
                       <MenuItem key={item._id} value={item._id}>
                         {item.name}
                       </MenuItem>
@@ -203,7 +203,7 @@ class Reports extends PureComponent {
               <span className="total">
                 Total:
                 <span className="number">
-$
+                  $
                   {filterTotal}
                 </span>
               </span>
@@ -226,10 +226,10 @@ Reports.defaultProps = {
   categories: [],
 };
 
-const mapStateToProps = state => ({ movements: state.movements, categories: state.categories });
+const mapStateToProps = (state) => ({ movements: state.movements, categories: state.categories });
 
-const mapDispatchToProps = dispatch => ({
-  setMessage: data => dispatch(comunication.setMessage(data)),
+const mapDispatchToProps = (dispatch) => ({
+  setMessage: (data) => dispatch(comunication.setMessage(data)),
 });
 
 export default connect(

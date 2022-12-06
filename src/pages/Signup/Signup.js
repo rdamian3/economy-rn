@@ -203,11 +203,11 @@ Signup.defaultProps = {
   history: null,
 };
 
-const mapStateToProps = state => ({ isFetching: state.isFetching, message: state.message });
+const mapStateToProps = (state) => ({ isFetching: state.isFetching, message: state.message });
 
-const mapDispatchToProps = dispatch => ({
-  doSignup: data => dispatch(user.doSignup(data)),
-  setMessage: data => dispatch(comunication.setMessage(data)),
+const mapDispatchToProps = (dispatch) => ({
+  doSignup: (data) => dispatch(user.doSignup(data)),
+  setMessage: (data) => dispatch(comunication.setMessage(data)),
 });
 
 export default connect(

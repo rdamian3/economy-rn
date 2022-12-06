@@ -100,7 +100,7 @@ class MovementsTable extends PureComponent {
     const { name } = event.target;
     const { value } = event.target;
     this.setState((prevState) => {
-      const movementToEdit = Object.assign({}, prevState.movementToEdit);
+      const movementToEdit = { ...prevState.movementToEdit };
       movementToEdit[name] = value;
       return { movementToEdit };
     });
@@ -246,7 +246,7 @@ class MovementsTable extends PureComponent {
               </TableCell>
               <TableCell align="left" className="foot-cell">
                 <span className={total > 0 ? 'positive' : 'negative'}>
-$
+                  $
                   {total}
                 </span>
               </TableCell>
@@ -300,11 +300,11 @@ MovementsTable.defaultProps = {
   message: {},
 };
 
-const mapStateToProps = state => ({ total: state.total, message: state.message });
+const mapStateToProps = (state) => ({ total: state.total, message: state.message });
 
-const mapDispatchToProps = dispatch => ({
-  updateMovement: data => dispatch(movement.updateMovement(data)),
-  deleteMovement: data => dispatch(movement.deleteMovement(data)),
+const mapDispatchToProps = (dispatch) => ({
+  updateMovement: (data) => dispatch(movement.updateMovement(data)),
+  deleteMovement: (data) => dispatch(movement.deleteMovement(data)),
 });
 
 export default connect(

@@ -74,7 +74,6 @@ export function addCategory(data) {
 }
 
 export function updateCategory(data) {
-  debugger;
   return (dispatch) => {
     dispatch(comunication.startFetching());
     const userToken = localStorage.getItem('userToken');

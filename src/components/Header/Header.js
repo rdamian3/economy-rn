@@ -20,7 +20,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import PrintIcon from '@material-ui/icons/Print';
 import { user } from '../../store/actions/index';
 
-const defaultAvatar = require('./../../assets/avatar-placeholder.png');
+const defaultAvatar = require('../../assets/avatar-placeholder.png');
 
 class Header extends PureComponent {
   constructor(props) {
@@ -119,7 +119,7 @@ class Header extends PureComponent {
                 <CloseIcon />
               </ListItem>
               <Divider />
-              {links.map(item => (
+              {links.map((item) => (
                 <Link to={item.link} key={item.text + item.link}>
                   <ListItem button onClick={this.toggleOpenDrawer}>
                     <ListItemIcon>{item.icon}</ListItemIcon>
@@ -133,7 +133,7 @@ class Header extends PureComponent {
         <Hidden smDown implementation="js">
           <Drawer open className="drawer" variant="permanent">
             <List style={{ width: 300 }}>
-              {links.map(item => (
+              {links.map((item) => (
                 <Link to={item.link} key={item.text + item.link}>
                   <ListItem button>
                     <ListItemIcon>{item.icon}</ListItemIcon>
@@ -193,9 +193,9 @@ Header.defaultProps = {
   history: null,
 };
 
-const mapStateToProps = state => ({ userData: state.userData });
+const mapStateToProps = (state) => ({ userData: state.userData });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   doLogout: () => dispatch(user.doLogout()),
 });
 

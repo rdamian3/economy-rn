@@ -70,7 +70,7 @@ class Categories extends PureComponent {
     const { name } = event.target;
     const { value } = event.target;
     this.setState((prevState) => {
-      const categoryToEdit = Object.assign({}, prevState.categoryToEdit);
+      const categoryToEdit = { ...prevState.categoryToEdit };
       categoryToEdit[name] = value;
       return { categoryToEdit };
     });
@@ -145,7 +145,7 @@ class Categories extends PureComponent {
                 && categories
                   .sort((a, b) => this.doSort(a, b))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map(row => (
+                  .map((row) => (
                     <TableRow key={row._id}>
                       <TableCell align="left" className="category-cell">
                         {row.name}
@@ -219,11 +219,11 @@ Categories.defaultProps = {
   categories: [],
 };
 
-const mapStateToProps = state => ({ categories: state.categories, message: state.message });
+const mapStateToProps = (state) => ({ categories: state.categories, message: state.message });
 
-const mapDispatchToProps = dispatch => ({
-  updateCategory: data => dispatch(category.updateCategory(data)),
-  deleteCategory: data => dispatch(category.deleteCategory(data)),
+const mapDispatchToProps = (dispatch) => ({
+  updateCategory: (data) => dispatch(category.updateCategory(data)),
+  deleteCategory: (data) => dispatch(category.deleteCategory(data)),
 });
 
 export default connect(

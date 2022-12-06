@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Chart from 'react-apexcharts';
 import './PieChart.scss';
 
-const PieChart = (props) => {
+function PieChart(props) {
   const { movements } = props;
   if (Object.entries(movements).length === 0 && movements.constructor === Object) {
     return <div className="pie-no-movements">Aún no hay movimientos...</div>;
@@ -30,7 +30,7 @@ const PieChart = (props) => {
       },
     },
   };
-  const series = Object.values(movements).map(num => Math.abs(num));
+  const series = Object.values(movements).map((num) => Math.abs(num));
 
   return (
     <div className="Piechart">
@@ -38,12 +38,12 @@ const PieChart = (props) => {
       <span>Movimientos</span>
     </div>
   );
-};
+}
 
 PieChart.propTypes = {
   movements: PropTypes.shape(PropTypes.shape).isRequired,
 };
 
-const mapStateToProps = state => ({ movements: state.filteredMovements });
+const mapStateToProps = (state) => ({ movements: state.filteredMovements });
 
 export default connect(mapStateToProps)(PieChart);

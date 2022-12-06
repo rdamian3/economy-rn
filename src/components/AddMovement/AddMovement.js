@@ -103,7 +103,6 @@ class AddMovement extends PureComponent {
 
     const startX = document.getElementsByClassName('modal-container').offsetWidth / 2;
 
-
     return (
       <div className="Addmovement">
         <h1 className={`title ${typeOfMovement === 'income' ? 'positive' : 'negative'}`}>
@@ -120,7 +119,7 @@ class AddMovement extends PureComponent {
               ),
             }}
             name="date"
-            onChange={date => this.handleDateChange(date)}
+            onChange={(date) => this.handleDateChange(date)}
             value={newMovement.date}
           />
         </MuiPickersUtilsProvider>
@@ -170,7 +169,7 @@ class AddMovement extends PureComponent {
             value={newMovement.category._id}
           >
             {cat.length > 0 ? (
-              cat.map(item => (
+              cat.map((item) => (
                 <MenuItem key={item._id} value={item._id}>
                   {item.name}
                 </MenuItem>
@@ -226,11 +225,11 @@ AddMovement.defaultProps = {
   newMovement: {},
 };
 
-const mapStateToProps = state => ({ categories: state.categories });
+const mapStateToProps = (state) => ({ categories: state.categories });
 
-const mapDispatchToProps = dispatch => ({
-  addCategory: data => dispatch(category.addCategory(data)),
-  setMessage: data => dispatch(comunication.setMessage(data)),
+const mapDispatchToProps = (dispatch) => ({
+  addCategory: (data) => dispatch(category.addCategory(data)),
+  setMessage: (data) => dispatch(comunication.setMessage(data)),
 });
 
 export default connect(

@@ -8,7 +8,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Draggable from 'react-draggable';
 import './Modal.scss';
 
-const Modal = (props) => {
+function Modal(props) {
   let componentTitle;
   let borders = null;
   const {
@@ -66,7 +66,7 @@ const Modal = (props) => {
       <div className="background" onClick={toggleModal} />
     </div>
   );
-};
+}
 
 Modal.propTypes = {
   typeOfMovement: PropTypes.string,
@@ -88,6 +88,6 @@ Modal.defaultProps = {
   title: '',
 };
 
-const mapStateToProps = state => ({ isFetching: state.isFetching });
+const mapStateToProps = (state) => ({ isFetching: state.isFetching });
 
 export default connect(mapStateToProps)(Modal);

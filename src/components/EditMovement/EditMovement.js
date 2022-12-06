@@ -51,7 +51,7 @@ class EditMovement extends PureComponent {
               ),
             }}
             name="date"
-            onChange={date => this.handleDateChange(date)}
+            onChange={(date) => this.handleDateChange(date)}
             value={movementToEdit.date}
           />
         </MuiPickersUtilsProvider>
@@ -97,7 +97,7 @@ class EditMovement extends PureComponent {
             onChange={this.handleCategoryChange}
           >
             {categories ? (
-              categories.map(item => (
+              categories.map((item) => (
                 <MenuItem key={item._id} value={item._id}>
                   {item.name}
                 </MenuItem>
@@ -122,6 +122,6 @@ EditMovement.defaultProps = {
   categories: [],
 };
 
-const mapStateToProps = state => ({ categories: state.categories });
+const mapStateToProps = (state) => ({ categories: state.categories });
 
 export default connect(mapStateToProps)(EditMovement);

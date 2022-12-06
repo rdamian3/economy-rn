@@ -75,9 +75,9 @@ App.defaultProps = {
   userToken: '',
 };
 
-const mapStateToProps = state => ({ userToken: state.userToken });
+const mapStateToProps = (state) => ({ userToken: state.userToken });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   sessionHandler: (param, param2, param3) => {
     dispatch(session.sessionHandler(param, param2, param3));
   },

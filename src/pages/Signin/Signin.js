@@ -113,10 +113,10 @@ Signin.propTypes = {
   doSignin: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({ isFetching: state.isFetching });
+const mapStateToProps = (state) => ({ isFetching: state.isFetching });
 
-const mapDispatchToProps = dispatch => ({
-  doSignin: data => dispatch(user.doSignin(data)),
+const mapDispatchToProps = (dispatch) => ({
+  doSignin: (data) => dispatch(user.doSignin(data)),
 });
 
 export default connect(

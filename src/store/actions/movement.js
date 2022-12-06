@@ -49,7 +49,7 @@ function filterMovementsByAmountAndCategory(data) {
     const aux = [];
 
     data
-      .map(elem => ({
+      .map((elem) => ({
         amount: elem.amount,
         category: elem.category.name,
       }))

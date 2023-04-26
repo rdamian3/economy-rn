@@ -232,7 +232,7 @@ export function doUpload(file) {
     axios
       .post(`${API_URL}/upload`, formData, {
         headers: {
-          'Content-type': 'application/json',
+          'Content-type': 'multipart/form-data',
           authorization: userToken,
           bucket: userData.bucket,
         },

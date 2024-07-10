@@ -1,5 +1,5 @@
-@import "./../../utils/colors.scss";
-@import "./../../utils/mixins.scss";
+@import './../../utils/colors.scss';
+@import './../../utils/mixins.scss';
 
 .Categories {
   @include flex-center-all;
@@ -16,6 +16,15 @@
   .no-category {
     @include flex-center-all;
     padding: 50px 20px;
+  }
+  .card-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: 20px;
+    .btn-add {
+      max-width: 220px;
+    }
   }
 }
 

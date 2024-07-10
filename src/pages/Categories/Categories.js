@@ -13,9 +13,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import { Button } from '@material-ui/core';
 import Modal from '../../components/Modal/Modal';
-import { category } from '../../store/actions/index';
+import { category, comunication } from '../../store/actions/index';
 import EditCategory from '../../components/EditCategory/EditCategory';
+import AddCategory from '../../components/AddCategory/AddCategory';
 
 import './Categories.scss';
 
@@ -25,11 +27,14 @@ class Categories extends PureComponent {
 
     this.state = {
       isModalOpen: false,
+      isAddModalOpen: false,
       categories: [],
       page: 0,
       rowsPerPage: 8,
       sortBy: { type: 'date', asc: true },
       categoryToEdit: { name: '', description: '' },
+      childCategoryDesc: '',
+      childCategoryName: '',
     };
   }
 
@@ -101,10 +106,50 @@ class Categories extends PureComponent {
     this.setState({ isModalOpen: !isModalOpen });
   };
 
+  handleChildCategoryDesc = (event) => {
+    const childCategoryDesc = event.target.value;
+    this.setState({ childCategoryDesc });
+  };
+
+  handleChildCategoryName = (name) => {
+    this.setState({ childCategoryName: name });
+  };
+
+  toggleAddModal = () => {
+    const { isAddModalOpen } = this.state;
+    this.setState({ isAddModalOpen: !isAddModalOpen });
+  };
+
+  addNewCategory = () => {
+    const { childCategoryDesc: description, childCategoryName: name } =
+      this.state;
+
+    const { addCategory, setMessage } = this.props;
+
+    if (name !== '') {
+      addCategory({ name, description });
+      this.toggleAddModal();
+      this.setState({ childCategoryDesc: '', childCategoryName: '' });
+    } else {
+      setMessage({
+        message: 'Verifique los campos',
+        type: 'error',
+        kind: 'category',
+      });
+    }
+  };
+
   render() {
     const {
-      categories, isModalOpen, page, rowsPerPage, sortBy, categoryToEdit,
+      categories,
+      isModalOpen,
+      page,
+      rowsPerPage,
+      sortBy,
+      categoryToEdit,
+      isAddModalOpen,
     } = this.state;
+
     if (categories.length === 0) {
       return (
         <div className="Categories">
@@ -141,8 +186,8 @@ class Categories extends PureComponent {
               </TableRow>
             </TableHead>
             <TableBody>
-              {categories.length !== 0
-                && categories
+              {categories.length !== 0 &&
+                categories
                   .sort((a, b) => this.doSort(a, b))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
@@ -184,11 +229,23 @@ class Categories extends PureComponent {
                   SelectProps={{
                     native: true,
                   }}
-                  labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
+                  labelDisplayedRows={({ from, to, count }) =>
+                    `${from}-${to} de ${count}`
+                  }
                 />
               </TableRow>
             </TableFooter>
           </Table>
+          <div className="card-footer">
+            <Button
+              className="btn-add"
+              color="primary"
+              onClick={this.toggleAddModal}
+              variant="contained"
+            >
+              Agregar Categoría
+            </Button>
+          </div>
           <Modal
             acceptAction={this.doUpdateCategory}
             isDraggable
@@ -201,6 +258,18 @@ class Categories extends PureComponent {
             <EditCategory
               categoryToEdit={categoryToEdit}
               handleEditCategory={this.handleEditCategory}
+            />
+          </Modal>
+          <Modal
+            acceptAction={this.addNewCategory}
+            isDraggable={false}
+            isOpen={isAddModalOpen}
+            title="Agregar Categoría"
+            toggleModal={this.toggleAddModal}
+          >
+            <AddCategory
+              childCategoryDesc={this.handleChildCategoryDesc}
+              childCategoryName={this.handleChildCategoryName}
             />
           </Modal>
         </div>
@@ -219,14 +288,16 @@ Categories.defaultProps = {
   categories: [],
 };
 
-const mapStateToProps = (state) => ({ categories: state.categories, message: state.message });
+const mapStateToProps = (state) => ({
+  categories: state.categories,
+  message: state.message,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   updateCategory: (data) => dispatch(category.updateCategory(data)),
   deleteCategory: (data) => dispatch(category.deleteCategory(data)),
+  addCategory: (data) => dispatch(category.addCategory(data)),
+  setMessage: (data) => dispatch(comunication.setMessage(data)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Categories);
+export default connect(mapStateToProps, mapDispatchToProps)(Categories);

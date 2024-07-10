@@ -33,5 +33,9 @@ module.exports = {
     'react/no-string-refs': 0,
     'react/forbid-prop-types': 0,
     'no-alert': 0,
+    'operator-linebreak': 0,
+    'react/jsx-curly-newline': 0,
+    'react/prop-types': 0,
+    'implicit-arrow-linebreak': 0,
   },
 };

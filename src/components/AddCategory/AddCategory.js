@@ -32,7 +32,11 @@ class AddCategory extends PureComponent {
           margin="normal"
           onChange={this.handleCategoryName}
         />
-        <TextField label="Descripción" margin="normal" onChange={childCategoryDesc} />
+        <TextField
+          label="Descripción"
+          margin="normal"
+          onChange={childCategoryDesc}
+        />
       </div>
     );
   }

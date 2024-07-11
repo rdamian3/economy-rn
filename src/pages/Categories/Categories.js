@@ -150,102 +150,88 @@ class Categories extends PureComponent {
       isAddModalOpen,
     } = this.state;
 
-    if (categories.length === 0) {
-      return (
-        <div className="Categories">
-          <div className="card no-category">
-            <span>Aún no hay categorías para mostrar!</span>
-          </div>
-        </div>
-      );
-    }
-
     return (
       <div className="Categories">
         <div className="card">
-          <Table className="table-container">
-            <TableHead className="table-head">
-              <TableRow>
-                <TableCell
-                  align="left"
-                  className="head-cell category-cell"
-                  onClick={() => this.setSort('category')}
-                >
-                  Categoría
-                  <TableSortLabel
-                    className="sort-label"
-                    active={sortBy.type === 'category'}
-                    direction={sortBy.asc ? 'asc' : 'desc'}
+          {categories.length === 0 ? (
+            <div className="no-category">
+              <span>Aún no hay categorías para mostrar!</span>
+            </div>
+          ) : (
+            <Table className="table-container">
+              <TableHead className="table-head">
+                <TableRow>
+                  <TableCell
+                    align="left"
+                    className="head-cell category-cell"
+                    onClick={() => this.setSort('category')}
+                  >
+                    Categoría
+                    <TableSortLabel
+                      className="sort-label"
+                      active={sortBy.type === 'category'}
+                      direction={sortBy.asc ? 'asc' : 'desc'}
+                    />
+                  </TableCell>
+                  <TableCell align="left" className="description-cell">
+                    Descripción
+                  </TableCell>
+                  <TableCell className="option-cell" />
+                  <TableCell className="option-cell" />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {categories.length !== 0 &&
+                  categories
+                    .sort((a, b) => this.doSort(a, b))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => (
+                      <TableRow key={row._id}>
+                        <TableCell align="left" className="category-cell">
+                          {row.name}
+                        </TableCell>
+                        <TableCell align="left" className="description-cell">
+                          {row.description}
+                        </TableCell>
+                        <TableCell align="right" className="option-cell">
+                          <IconButton
+                            aria-label="Edit"
+                            onClick={() => this.handleUpdateCategory(row)}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </TableCell>
+                        <TableCell align="right" className="option-cell">
+                          <IconButton
+                            aria-label="Delete"
+                            onClick={() => this.handleDeleteCategory(row)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[]}
+                    onChangePage={this.handleChangePage}
+                    page={page}
+                    count={categories.length}
+                    rowsPerPage={rowsPerPage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    SelectProps={{
+                      native: true,
+                    }}
+                    labelDisplayedRows={({ from, to, count }) =>
+                      `${from}-${to} de ${count}`
+                    }
                   />
-                </TableCell>
-                <TableCell align="left" className="description-cell">
-                  Descripción
-                </TableCell>
-                <TableCell className="option-cell" />
-                <TableCell className="option-cell" />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {categories.length !== 0 &&
-                categories
-                  .sort((a, b) => this.doSort(a, b))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <TableRow key={row._id}>
-                      <TableCell align="left" className="category-cell">
-                        {row.name}
-                      </TableCell>
-                      <TableCell align="left" className="description-cell">
-                        {row.description}
-                      </TableCell>
-                      <TableCell align="right" className="option-cell">
-                        <IconButton
-                          aria-label="Edit"
-                          onClick={() => this.handleUpdateCategory(row)}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell align="right" className="option-cell">
-                        <IconButton
-                          aria-label="Delete"
-                          onClick={() => this.handleDeleteCategory(row)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[]}
-                  onChangePage={this.handleChangePage}
-                  page={page}
-                  count={categories.length}
-                  rowsPerPage={rowsPerPage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                  SelectProps={{
-                    native: true,
-                  }}
-                  labelDisplayedRows={({ from, to, count }) =>
-                    `${from}-${to} de ${count}`
-                  }
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-          <div className="card-footer">
-            <Button
-              className="btn-add"
-              color="primary"
-              onClick={this.toggleAddModal}
-              variant="contained"
-            >
-              Agregar Categoría
-            </Button>
-          </div>
+                </TableRow>
+              </TableFooter>
+            </Table>
+          )}
           <Modal
             acceptAction={this.doUpdateCategory}
             isDraggable
@@ -272,6 +258,16 @@ class Categories extends PureComponent {
               childCategoryName={this.handleChildCategoryName}
             />
           </Modal>
+        </div>
+        <div className="card-footer">
+          <Button
+            className="btn-add"
+            color="primary"
+            onClick={this.toggleAddModal}
+            variant="contained"
+          >
+            Agregar Categoría
+          </Button>
         </div>
       </div>
     );

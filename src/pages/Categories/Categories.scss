@@ -4,6 +4,7 @@
 .Categories {
   @include flex-center-all;
   padding: 20px;
+  flex-direction: column;
 
   .card {
     @include box-shadow;
